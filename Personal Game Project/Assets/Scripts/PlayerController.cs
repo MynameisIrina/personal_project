@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
+using System.Diagnostics;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
+using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -45,6 +47,8 @@ public class PlayerController : MonoBehaviour
     // PICK UP/PUT AWAY ATTRIBUTES
     public bool pick_up { get; private set; }
     public bool put_away { get; private set; }
+    private Inventory inventory;
+    [SerializeField] private UI_Inventory uiInventory;
     
 
     [Header("Player Step Climb:")]
@@ -58,7 +62,7 @@ public class PlayerController : MonoBehaviour
 
     void Awake()
     {
-
+        
 
     }
 
@@ -69,6 +73,9 @@ public class PlayerController : MonoBehaviour
         rb.detectCollisions = true;
         crosshair = FindObjectOfType<Canvas>();
         crosshair.enabled = false;
+        inventory = new Inventory();
+        uiInventory.SetInventory(inventory);
+        
     }
 
 
