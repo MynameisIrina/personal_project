@@ -18,12 +18,11 @@ public class CameraController : MonoBehaviour
     private float look_vert;
     private float distance_to_target = 7f;
     private RaycastHit hit;
-    private int player_layerMask = LayerMask.GetMask("Player");
 
     private void Start()
     {
         aim_camera.SetActive(false);
-        
+
     }
 
 
@@ -36,7 +35,6 @@ public class CameraController : MonoBehaviour
     // Update is called once per frame
     private void LateUpdate()
     {
-        player_layerMask = ~(player_layerMask);
         // get an input from the player
         look_hor += look_input.x;
         look_vert -= look_input.y;

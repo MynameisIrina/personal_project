@@ -80,6 +80,24 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Pick up"",
+                    ""type"": ""Button"",
+                    ""id"": ""edc0379d-d856-49b4-9c09-adfac886360d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Put away"",
+                    ""type"": ""Button"",
+                    ""id"": ""d35b982a-0267-4f5d-8436-6b7752ac46a7"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -146,6 +164,28 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""OpenDoor"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3ea424a5-7f45-47ec-8a92-9617a1c57845"",
+                    ""path"": ""<Gamepad>/buttonNorth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Pick up"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2ea462e6-70e7-447f-8af1-b034e69f2002"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Put away"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -739,6 +779,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         m_Player_Jump = m_Player.FindAction("Jump", throwIfNotFound: true);
         m_Player_Fire = m_Player.FindAction("Fire", throwIfNotFound: true);
         m_Player_OpenDoor = m_Player.FindAction("OpenDoor", throwIfNotFound: true);
+        m_Player_Pickup = m_Player.FindAction("Pick up", throwIfNotFound: true);
+        m_Player_Putaway = m_Player.FindAction("Put away", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -816,6 +858,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
     private readonly InputAction m_Player_Jump;
     private readonly InputAction m_Player_Fire;
     private readonly InputAction m_Player_OpenDoor;
+    private readonly InputAction m_Player_Pickup;
+    private readonly InputAction m_Player_Putaway;
     public struct PlayerActions
     {
         private @PlayerActionController m_Wrapper;
@@ -826,6 +870,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         public InputAction @Jump => m_Wrapper.m_Player_Jump;
         public InputAction @Fire => m_Wrapper.m_Player_Fire;
         public InputAction @OpenDoor => m_Wrapper.m_Player_OpenDoor;
+        public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
+        public InputAction @Putaway => m_Wrapper.m_Player_Putaway;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -853,6 +899,12 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @OpenDoor.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenDoor;
                 @OpenDoor.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenDoor;
                 @OpenDoor.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnOpenDoor;
+                @Pickup.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
+                @Pickup.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
+                @Pickup.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPickup;
+                @Putaway.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPutaway;
+                @Putaway.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPutaway;
+                @Putaway.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPutaway;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -875,6 +927,12 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @OpenDoor.started += instance.OnOpenDoor;
                 @OpenDoor.performed += instance.OnOpenDoor;
                 @OpenDoor.canceled += instance.OnOpenDoor;
+                @Pickup.started += instance.OnPickup;
+                @Pickup.performed += instance.OnPickup;
+                @Pickup.canceled += instance.OnPickup;
+                @Putaway.started += instance.OnPutaway;
+                @Putaway.performed += instance.OnPutaway;
+                @Putaway.canceled += instance.OnPutaway;
             }
         }
     }
@@ -1037,6 +1095,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         void OnJump(InputAction.CallbackContext context);
         void OnFire(InputAction.CallbackContext context);
         void OnOpenDoor(InputAction.CallbackContext context);
+        void OnPickup(InputAction.CallbackContext context);
+        void OnPutaway(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

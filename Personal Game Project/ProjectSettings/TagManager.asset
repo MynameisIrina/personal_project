@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Ground
   - House
+  - Door
   layers:
   - Default
   - TransparentFX
@@ -42,4 +43,7 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Button
+    uniqueID: 1211049763
     locked: 0

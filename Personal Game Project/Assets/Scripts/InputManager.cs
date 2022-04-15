@@ -17,6 +17,9 @@ public class InputManager : MonoBehaviour
     private Vector2 look_input;
     public bool aim_input { get; private set; }
     private bool fire_input;
+    private bool put_away;
+
+    private bool pick_up;
     // Start is called before the first frame update
     void Awake()
     {
@@ -57,7 +60,12 @@ public class InputManager : MonoBehaviour
         };
         _actionController.Player.Fire.canceled += ctx => fire_input = false;
 
+        _actionController.Player.Pickup.performed += ctx => pick_up = ctx.ReadValueAsButton();
+        _actionController.Player.Pickup.canceled += ctx => pick_up = false;
         
+        _actionController.Player.Putaway.performed += ctx => put_away = ctx.ReadValueAsButton();
+        _actionController.Player.Putaway.canceled += ctx => put_away = false;
+
 
 
     }
@@ -69,7 +77,9 @@ public class InputManager : MonoBehaviour
         camera_controller.receiveInputLook(look_input);
         player_controller.ReceiveInputJump(jump_input);
         player_controller.ReceiveAimInput(aim_input);
-        arrow_controller.ReceiveFireInput(fire_input);
+        //arrow_controller.ReceiveFireInput(fire_input);
+        player_controller.ReceivePickUpInput(pick_up);
+        player_controller.ReceivePutAwayInput(put_away);
     }
     
     

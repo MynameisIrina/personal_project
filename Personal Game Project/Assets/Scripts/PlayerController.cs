@@ -1,5 +1,8 @@
 using System;
+using System.Collections;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -10,7 +13,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject camera;
     private Vector2 move_value;
     private Animator animator;
-    public Vector3 new_position { get; set; }
+    public Vector3 new_position { get; private set; }
     private Vector3 newCam_position;
     private Vector3 target;
 
@@ -39,6 +42,11 @@ public class PlayerController : MonoBehaviour
     private Canvas crosshair;
     private bool stairs;
     
+    // PICK UP/PUT AWAY ATTRIBUTES
+    public bool pick_up { get; private set; }
+    public bool put_away { get; private set; }
+    
+
     [Header("Player Step Climb:")]
     [SerializeField] private GameObject lower_ray;
     [SerializeField] private GameObject higher_ray;
@@ -71,21 +79,23 @@ public class PlayerController : MonoBehaviour
             RotateAim();
         }
         
-
         bool grounded = Physics.Raycast(rayCastOrigin.transform.position, Vector3.down, 0.5f);
         Debug.DrawRay(rayCastOrigin.transform.position, Vector3.down);
         if (!grounded)
         {
             rb.AddForce(Physics.gravity * 2.5f, ForceMode.Acceleration);
-           // rb.AddForce(rb.mass * Physics.gravity);
         }
-        else
-        {
-            
-        }
+
+        MovePlayer();
+        
+        //ability to climb up the stairs using rigidbody
+        ClimbStairs();
         
 
+    }
 
+    private void MovePlayer()
+    {
         Vector3 camF = camera.transform.forward;
         Vector3 camR = camera.transform.right;
         camF.y = 0;
@@ -114,15 +124,9 @@ public class PlayerController : MonoBehaviour
         
         SetAnimations(speed_blendtree);
         rb.MovePosition(transform.position + (new_position * speed * Time.fixedDeltaTime));
-        
-        /*
-         *  ability to climb up the stairs using rigidbody
-         */
-
-        ClimbStairs();
-
-
     }
+    
+    
 
     private void ClimbStairs()
     {
@@ -222,18 +226,28 @@ public class PlayerController : MonoBehaviour
 
         }
     }
-    
+
+    public void ReceivePickUpInput(bool _pick_up)
+    {
+        pick_up = _pick_up;
+    }
+
+    public void ReceivePutAwayInput(bool _put_away)
+    {
+        put_away = _put_away;
+    }
     
 
 
-    
-    
-    
-    
-   
-    
-    
-    
+
+
+
+
+
+
+
+
+
 
 
 }
