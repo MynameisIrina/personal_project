@@ -7,6 +7,9 @@ TagManager:
   - Ground
   - House
   - Door
+  - Note
+  - Bow
+  - Weapon
   layers:
   - Default
   - TransparentFX

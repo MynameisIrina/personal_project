@@ -22,11 +22,11 @@ public class UI_Inventory : MonoBehaviour
         template = container.Find("Template");
     }
 
-    private void RefreshInventoryItems()
+    public void RefreshInventoryItems()
     {
         int x = 0;
         int y = 0;
-        float cellSize = 15f;
+        float cellSize = 24f;
         foreach (Item item in inventory.itemList)
         {
             RectTransform rect_transform = Instantiate(template, container).GetComponent<RectTransform>();

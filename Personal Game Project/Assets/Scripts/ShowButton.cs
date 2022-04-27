@@ -36,7 +36,7 @@ public class ShowButton : MonoBehaviour
         if (other.tag == "Player")
         {
             show_button = true;
-            gameObject.GetComponent<OpenNote>().enabled = true;
+            //gameObject.GetComponent<OpenNote>().enabled = true;
         }
     }
 
@@ -44,7 +44,7 @@ public class ShowButton : MonoBehaviour
     {
         show_button = false; 
         button_triangle.GetComponent<Canvas>().enabled = false;
-        gameObject.GetComponent<OpenNote>().enabled = false;
+        //gameObject.GetComponent<OpenNote>().enabled = false;
 
     }
 }

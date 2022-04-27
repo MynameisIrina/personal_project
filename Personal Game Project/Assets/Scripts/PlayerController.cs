@@ -75,8 +75,10 @@ public class PlayerController : MonoBehaviour
         crosshair.enabled = false;
         inventory = new Inventory();
         uiInventory.SetInventory(inventory);
-        
+        GetComponent<OpenNote>().enabled = false;
+        GetComponent<PickUpWeapon>().enabled = false;
     }
+
 
 
     private void FixedUpdate()
@@ -94,8 +96,6 @@ public class PlayerController : MonoBehaviour
         }
 
         MovePlayer();
-        
-        //ability to climb up the stairs using rigidbody
         ClimbStairs();
         
 
@@ -143,7 +143,6 @@ public class PlayerController : MonoBehaviour
             RaycastHit higherHit;
             if (!Physics.Raycast(higher_ray.transform.position, transform.TransformDirection(Vector3.forward), out higherHit, 1.7f))
             {
-
                 stairs = true;
                 if (animator.GetBool("forward"))
                 {
@@ -167,6 +166,17 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.GetComponent<OpenDoor>().enabled = true;
         }
+
+        if (other.CompareTag("Note"))
+        {
+            gameObject.GetComponent<OpenNote>().enabled = true;
+        }
+
+        if (other.CompareTag("Weapon"))
+        {
+            gameObject.GetComponent<PickUpWeapon>().enabled = true;
+            
+        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -174,6 +184,14 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Door"))
         {
             gameObject.GetComponent<OpenDoor>().enabled = false;
+        }
+        if (other.CompareTag("Note"))
+        {
+            gameObject.GetComponent<OpenNote>().enabled = false;
+        }
+        if (other.CompareTag("Weapon"))
+        {
+            gameObject.GetComponent<PickUpWeapon>().enabled = false;
         }
     }
 
@@ -242,6 +260,16 @@ public class PlayerController : MonoBehaviour
     public void ReceivePutAwayInput(bool _put_away)
     {
         put_away = _put_away;
+    }
+
+    public Inventory GetInventory()
+    {
+        return inventory;
+    }
+
+    public Animator GetAnimator()
+    {
+        return animator;
     }
     
 

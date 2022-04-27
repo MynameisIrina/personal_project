@@ -6,6 +6,7 @@ using UnityEngine;
 public class OpenDoor : MonoBehaviour
 {
     [SerializeField] private GameObject door;
+    [SerializeField] private GameObject pivot_point;
     
     
     
@@ -13,7 +14,7 @@ public class OpenDoor : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        door.transform.RotateAround(gameObject.transform.position, Vector3.up, 45f);
+        door.transform.RotateAround(pivot_point.transform.position, Vector3.up, 90f);
     }
 
     void Awake()
