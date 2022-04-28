@@ -12,6 +12,7 @@ public class InputManager : MonoBehaviour
     [SerializeField] private PlayerController player_controller;
     [SerializeField] private CameraController camera_controller;
     [SerializeField] private Arrow arrow_controller;
+    [SerializeField] private InventoryAnimation _inventoryAnimation;
     private Vector2 move_value;
     private bool jump_input;
     private Vector2 look_input;
@@ -20,6 +21,9 @@ public class InputManager : MonoBehaviour
     private bool put_away;
 
     private bool pick_up;
+    
+    // UI
+    private bool showInventory;
     // Start is called before the first frame update
     void Awake()
     {
@@ -67,6 +71,11 @@ public class InputManager : MonoBehaviour
         _actionController.Player.Putaway.canceled += ctx => put_away = false;
 
 
+        // UI
+        
+        _actionController.UI.ShowInventory.performed += ctx => showInventory = ctx.ReadValueAsButton();
+        _actionController.Player.Putaway.canceled += ctx => showInventory = false;
+
 
     }
 
@@ -77,9 +86,9 @@ public class InputManager : MonoBehaviour
         camera_controller.receiveInputLook(look_input);
         player_controller.ReceiveInputJump(jump_input);
         player_controller.ReceiveAimInput(aim_input);
-        //arrow_controller.ReceiveFireInput(fire_input);
         player_controller.ReceivePickUpInput(pick_up);
         player_controller.ReceivePutAwayInput(put_away);
+        _inventoryAnimation.ReceiveShowInventoryInput(showInventory);
     }
     
     

@@ -8,6 +8,7 @@ public class PickUpWeapon : MonoBehaviour
     [SerializeField] private PlayerController playerController;
     [SerializeField] private UI_Inventory uiInventory;
     [SerializeField] private GameObject bow;
+    [SerializeField] private InventoryAnimation inventoryAnimation;
     private GameObject[] weapons;
     private Item.ItemType typeOfWeapon;
     
@@ -49,13 +50,20 @@ public class PickUpWeapon : MonoBehaviour
                     }
                     
                     playerController.GetInventory().AddItem(new Item {itemType = typeOfWeapon});
-                    uiInventory.RefreshInventoryItems();
+                    inventoryAnimation.ui_animator.SetBool("show_inventory", true);
+                    StartCoroutine(WaitForAnimation());
                     Destroy(weapon);
                     gameObject.GetComponent<PickUpWeapon>().enabled = false;
                 }
             }
 
         }
+    }
+
+    IEnumerator WaitForAnimation()
+    {
+        yield return new WaitForSeconds(0.8f);
+        uiInventory.RefreshInventoryItems();
     }
 }
     

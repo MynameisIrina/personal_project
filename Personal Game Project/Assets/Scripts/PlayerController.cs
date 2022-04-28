@@ -1,9 +1,4 @@
-using System;
-using System.Collections;
-using System.Diagnostics;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -11,7 +6,6 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
-    //private Vector2 move_value;
     [SerializeField] private GameObject camera;
     private Vector2 move_value;
     private Animator animator;
