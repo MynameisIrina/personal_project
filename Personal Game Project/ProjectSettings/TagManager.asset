@@ -10,6 +10,7 @@ TagManager:
   - Note
   - Bow
   - Weapon
+  - ClimbStairs
   layers:
   - Default
   - TransparentFX

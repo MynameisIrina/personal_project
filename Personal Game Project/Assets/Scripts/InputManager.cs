@@ -19,6 +19,7 @@ public class InputManager : MonoBehaviour
     public bool aim_input { get; private set; }
     private bool fire_input;
     private bool put_away;
+    private bool climb;
 
     private bool pick_up;
     
@@ -70,6 +71,9 @@ public class InputManager : MonoBehaviour
         _actionController.Player.Putaway.performed += ctx => put_away = ctx.ReadValueAsButton();
         _actionController.Player.Putaway.canceled += ctx => put_away = false;
 
+        _actionController.Player.Climb.performed += ctx => climb = ctx.ReadValueAsButton();
+        _actionController.Player.Climb.canceled += ctx => climb = false;
+
 
         // UI
         
@@ -88,6 +92,7 @@ public class InputManager : MonoBehaviour
         player_controller.ReceiveAimInput(aim_input);
         player_controller.ReceivePickUpInput(pick_up);
         player_controller.ReceivePutAwayInput(put_away);
+        player_controller.ReceiveClimbInput(climb);
         _inventoryAnimation.ReceiveShowInventoryInput(showInventory);
     }
     

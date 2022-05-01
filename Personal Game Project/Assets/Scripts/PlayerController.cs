@@ -44,6 +44,10 @@ public class PlayerController : MonoBehaviour
     private Inventory inventory;
     [SerializeField] private UI_Inventory uiInventory;
     
+    // CLIMB
+    private bool climb;
+    private bool collisionWithTower;
+    
 
     [Header("Player Step Climb:")]
     [SerializeField] private GameObject lower_ray;
@@ -71,6 +75,7 @@ public class PlayerController : MonoBehaviour
         uiInventory.SetInventory(inventory);
         GetComponent<OpenNote>().enabled = false;
         GetComponent<PickUpWeapon>().enabled = false;
+        GetComponent<Climb>().enabled = false;
     }
 
 
@@ -91,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
         MovePlayer();
         ClimbStairs();
-        
+
 
     }
 
@@ -156,6 +161,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("NAME: " + other.name);
         if (other.CompareTag("Door"))
         {
             gameObject.GetComponent<OpenDoor>().enabled = true;
@@ -170,6 +176,18 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.GetComponent<PickUpWeapon>().enabled = true;
             
+        }
+        if (other.CompareTag("ClimbStairs"))
+        {
+            Debug.Log("CLIMB " + climb);
+            if (climb)
+            {
+                gameObject.GetComponent<Climb>().enabled = true;
+            }
+            else
+            {
+                gameObject.GetComponent<Climb>().enabled = false;
+            }
         }
     }
 
@@ -187,6 +205,12 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.GetComponent<PickUpWeapon>().enabled = false;
         }
+        if (other.CompareTag("ClimbStairs"))
+        {
+            gameObject.GetComponent<Climb>().enabled = false;
+        }
+
+        
     }
 
     private void SetAnimations(float speed_blendtree)
@@ -244,6 +268,11 @@ public class PlayerController : MonoBehaviour
             crosshair.enabled = false;
 
         }
+    }
+
+    public void ReceiveClimbInput(bool _climb)
+    {
+        climb = _climb;
     }
 
     public void ReceivePickUpInput(bool _pick_up)

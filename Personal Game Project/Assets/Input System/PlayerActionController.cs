@@ -98,6 +98,15 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Climb"",
+                    ""type"": ""Button"",
+                    ""id"": ""19cb63f8-f95d-4d08-9433-d220a3bc0646"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -186,6 +195,17 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Put away"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""d368259e-d7e9-4ee6-bc2b-db296fd03ca0"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Climb"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -326,6 +346,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         m_Player_OpenDoor = m_Player.FindAction("OpenDoor", throwIfNotFound: true);
         m_Player_Pickup = m_Player.FindAction("Pick up", throwIfNotFound: true);
         m_Player_Putaway = m_Player.FindAction("Put away", throwIfNotFound: true);
+        m_Player_Climb = m_Player.FindAction("Climb", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_ShowInventory = m_UI.FindAction("ShowInventory", throwIfNotFound: true);
@@ -396,6 +417,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
     private readonly InputAction m_Player_OpenDoor;
     private readonly InputAction m_Player_Pickup;
     private readonly InputAction m_Player_Putaway;
+    private readonly InputAction m_Player_Climb;
     public struct PlayerActions
     {
         private @PlayerActionController m_Wrapper;
@@ -408,6 +430,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         public InputAction @OpenDoor => m_Wrapper.m_Player_OpenDoor;
         public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
         public InputAction @Putaway => m_Wrapper.m_Player_Putaway;
+        public InputAction @Climb => m_Wrapper.m_Player_Climb;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -441,6 +464,9 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @Putaway.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPutaway;
                 @Putaway.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPutaway;
                 @Putaway.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnPutaway;
+                @Climb.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
+                @Climb.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
+                @Climb.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -469,6 +495,9 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @Putaway.started += instance.OnPutaway;
                 @Putaway.performed += instance.OnPutaway;
                 @Putaway.canceled += instance.OnPutaway;
+                @Climb.started += instance.OnClimb;
+                @Climb.performed += instance.OnClimb;
+                @Climb.canceled += instance.OnClimb;
             }
         }
     }
@@ -561,6 +590,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         void OnOpenDoor(InputAction.CallbackContext context);
         void OnPickup(InputAction.CallbackContext context);
         void OnPutaway(InputAction.CallbackContext context);
+        void OnClimb(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {
