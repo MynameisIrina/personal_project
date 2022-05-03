@@ -12,6 +12,7 @@ public class PickUpWeapon : MonoBehaviour
     private GameObject[] weapons;
     private Item.ItemType typeOfWeapon;
     
+    
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,8 @@ public class PickUpWeapon : MonoBehaviour
          * and all of the weapons. If distance if small enough, check what type of weapon it is in
          * order to add it to inventory.
          */
+        
+        weapons = GameObject.FindGameObjectsWithTag("Weapon");
         
         if (playerController.pick_up)
         {
@@ -64,6 +67,7 @@ public class PickUpWeapon : MonoBehaviour
     {
         yield return new WaitForSeconds(0.8f);
         uiInventory.RefreshInventoryItems();
+        
     }
 }
     

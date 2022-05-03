@@ -223,6 +223,24 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GetRightItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""f5b079b6-5ee0-477b-83f0-b8740eaddb39"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""GetLeftItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""413a59d4-42dc-4310-82a5-b98e4dc0d25d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -267,6 +285,28 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""ShowInventory"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1a1da73e-8639-465a-ac9b-a6ac789ba66b"",
+                    ""path"": ""<Gamepad>/dpad/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""GetRightItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""6c2f74a0-e6b3-4450-89a0-e008826bc8c1"",
+                    ""path"": ""<Gamepad>/dpad/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""GetLeftItem"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -350,6 +390,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_ShowInventory = m_UI.FindAction("ShowInventory", throwIfNotFound: true);
+        m_UI_GetRightItem = m_UI.FindAction("GetRightItem", throwIfNotFound: true);
+        m_UI_GetLeftItem = m_UI.FindAction("GetLeftItem", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -507,11 +549,15 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
     private readonly InputActionMap m_UI;
     private IUIActions m_UIActionsCallbackInterface;
     private readonly InputAction m_UI_ShowInventory;
+    private readonly InputAction m_UI_GetRightItem;
+    private readonly InputAction m_UI_GetLeftItem;
     public struct UIActions
     {
         private @PlayerActionController m_Wrapper;
         public UIActions(@PlayerActionController wrapper) { m_Wrapper = wrapper; }
         public InputAction @ShowInventory => m_Wrapper.m_UI_ShowInventory;
+        public InputAction @GetRightItem => m_Wrapper.m_UI_GetRightItem;
+        public InputAction @GetLeftItem => m_Wrapper.m_UI_GetLeftItem;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -524,6 +570,12 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @ShowInventory.started -= m_Wrapper.m_UIActionsCallbackInterface.OnShowInventory;
                 @ShowInventory.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnShowInventory;
                 @ShowInventory.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnShowInventory;
+                @GetRightItem.started -= m_Wrapper.m_UIActionsCallbackInterface.OnGetRightItem;
+                @GetRightItem.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnGetRightItem;
+                @GetRightItem.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnGetRightItem;
+                @GetLeftItem.started -= m_Wrapper.m_UIActionsCallbackInterface.OnGetLeftItem;
+                @GetLeftItem.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnGetLeftItem;
+                @GetLeftItem.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnGetLeftItem;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -531,6 +583,12 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @ShowInventory.started += instance.OnShowInventory;
                 @ShowInventory.performed += instance.OnShowInventory;
                 @ShowInventory.canceled += instance.OnShowInventory;
+                @GetRightItem.started += instance.OnGetRightItem;
+                @GetRightItem.performed += instance.OnGetRightItem;
+                @GetRightItem.canceled += instance.OnGetRightItem;
+                @GetLeftItem.started += instance.OnGetLeftItem;
+                @GetLeftItem.performed += instance.OnGetLeftItem;
+                @GetLeftItem.canceled += instance.OnGetLeftItem;
             }
         }
     }
@@ -595,5 +653,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
     public interface IUIActions
     {
         void OnShowInventory(InputAction.CallbackContext context);
+        void OnGetRightItem(InputAction.CallbackContext context);
+        void OnGetLeftItem(InputAction.CallbackContext context);
     }
 }

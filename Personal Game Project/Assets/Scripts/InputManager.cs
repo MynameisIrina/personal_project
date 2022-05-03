@@ -20,11 +20,14 @@ public class InputManager : MonoBehaviour
     private bool fire_input;
     private bool put_away;
     private bool climb;
-
     private bool pick_up;
     
     // UI
     private bool showInventory;
+
+    private bool getRightItem;
+
+    private bool getLeftItem;
     // Start is called before the first frame update
     void Awake()
     {
@@ -78,7 +81,17 @@ public class InputManager : MonoBehaviour
         // UI
         
         _actionController.UI.ShowInventory.performed += ctx => showInventory = ctx.ReadValueAsButton();
-        _actionController.Player.Putaway.canceled += ctx => showInventory = false;
+        _actionController.UI.ShowInventory.canceled += ctx => showInventory = false;
+        //_actionController.Player.Putaway.canceled += ctx => showInventory = false;
+        _actionController.UI.GetRightItem.performed += ctx => getRightItem = ctx.ReadValueAsButton();
+        _actionController.UI.GetRightItem.canceled += ctx => getRightItem = false;
+        _actionController.UI.GetLeftItem.performed += ctx => getLeftItem = ctx.ReadValueAsButton();
+        _actionController.UI.GetRightItem.canceled += ctx => getLeftItem = false;
+
+
+
+
+
 
 
     }
@@ -89,11 +102,12 @@ public class InputManager : MonoBehaviour
         player_controller.ReceiveInputMovement(move_value);
         camera_controller.receiveInputLook(look_input);
         player_controller.ReceiveInputJump(jump_input);
-        player_controller.ReceiveAimInput(aim_input);
+        //player_controller.ReceiveAimInput(aim_input);
         player_controller.ReceivePickUpInput(pick_up);
         player_controller.ReceivePutAwayInput(put_away);
         player_controller.ReceiveClimbInput(climb);
         _inventoryAnimation.ReceiveShowInventoryInput(showInventory);
+        _inventoryAnimation.ReceiveGetRightLeftItems(getRightItem, getLeftItem);
     }
     
     

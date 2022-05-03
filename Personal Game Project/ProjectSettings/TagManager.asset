@@ -11,6 +11,8 @@ TagManager:
   - Bow
   - Weapon
   - ClimbStairs
+  - Ladder
+  - LadderEnd
   layers:
   - Default
   - TransparentFX

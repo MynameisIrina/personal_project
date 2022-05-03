@@ -1,3 +1,5 @@
+using System;
+using System.Linq.Expressions;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
@@ -45,9 +47,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private UI_Inventory uiInventory;
     
     // CLIMB
-    private bool climb;
-    private bool collisionWithTower;
+    [SerializeField] private GameObject rayGeneral;
+    [SerializeField] private GameObject ladder;
+    private GameObject objectInFrontOfPlayer;
+    private bool ladderCollision;
+    private bool climbLadder;
     
+    
+
 
     [Header("Player Step Climb:")]
     [SerializeField] private GameObject lower_ray;
@@ -55,6 +62,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float step;
     private RaycastHit hit;
     [SerializeField] private GameObject rayCastOrigin;
+    
 
 
 
@@ -75,7 +83,7 @@ public class PlayerController : MonoBehaviour
         uiInventory.SetInventory(inventory);
         GetComponent<OpenNote>().enabled = false;
         GetComponent<PickUpWeapon>().enabled = false;
-        GetComponent<Climb>().enabled = false;
+        GetComponent<ClimbLadder>().enabled = false;
     }
 
 
@@ -96,8 +104,20 @@ public class PlayerController : MonoBehaviour
 
         MovePlayer();
         ClimbStairs();
+        
 
+    }
 
+    private void Update()
+    {
+        // detect objects in front of you
+        RaycastHit objectsHit;
+        if (Physics.Raycast(rayGeneral.transform.position, transform.TransformDirection(Vector3.forward), out objectsHit,
+                7f))
+        {
+            objectInFrontOfPlayer = objectsHit.collider.gameObject;
+        }
+        
     }
 
     private void MovePlayer()
@@ -129,7 +149,7 @@ public class PlayerController : MonoBehaviour
         animator.SetFloat("Walk Magnitude", speed_blendtree);
         
         SetAnimations(speed_blendtree);
-        rb.MovePosition(transform.position + (new_position * speed * Time.fixedDeltaTime));
+        rb.MovePosition(rb.position + (new_position * speed * Time.fixedDeltaTime));
     }
     
     
@@ -155,13 +175,11 @@ public class PlayerController : MonoBehaviour
         }
         
         Debug.DrawRay(lower_ray.transform.position, transform.TransformDirection(Vector3.forward), Color.red);
-        //Debug.DrawRay(higher_ray.transform.position, transform.TransformDirection(Vector3.forward), Color.blue);
 
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("NAME: " + other.name);
         if (other.CompareTag("Door"))
         {
             gameObject.GetComponent<OpenDoor>().enabled = true;
@@ -177,17 +195,17 @@ public class PlayerController : MonoBehaviour
             gameObject.GetComponent<PickUpWeapon>().enabled = true;
             
         }
-        if (other.CompareTag("ClimbStairs"))
+        if (other.CompareTag("Ladder"))
         {
-            Debug.Log("CLIMB " + climb);
-            if (climb)
-            {
-                gameObject.GetComponent<Climb>().enabled = true;
-            }
-            else
-            {
-                gameObject.GetComponent<Climb>().enabled = false;
-            }
+            ladderCollision = true;
+        }
+
+        if (other.CompareTag("LadderEnd"))
+        {
+            climbLadder = false;
+            ladderCollision = false;
+            animator.SetBool("climb", false);
+            animator.SetBool("clamber", true);
         }
     }
 
@@ -205,9 +223,16 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.GetComponent<PickUpWeapon>().enabled = false;
         }
-        if (other.CompareTag("ClimbStairs"))
+        if (other.CompareTag("Ladder"))
         {
-            gameObject.GetComponent<Climb>().enabled = false;
+            ladderCollision = false;
+            animator.SetBool("climb", false);
+        }
+
+        if (other.CompareTag("LadderEnd"))
+        {
+            //rb.useGravity = true;
+            animator.SetBool("clamber", false);
         }
 
         
@@ -272,7 +297,7 @@ public class PlayerController : MonoBehaviour
 
     public void ReceiveClimbInput(bool _climb)
     {
-        climb = _climb;
+        climbLadder = _climb;
     }
 
     public void ReceivePickUpInput(bool _pick_up)
