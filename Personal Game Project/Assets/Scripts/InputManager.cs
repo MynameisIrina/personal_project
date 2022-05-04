@@ -23,6 +23,7 @@ public class InputManager : MonoBehaviour
     private bool pick_up;
     
     // UI
+    [SerializeField] private UI_Inventory uiInventory;
     private bool showInventory;
 
     private bool getRightItem;
@@ -83,9 +84,17 @@ public class InputManager : MonoBehaviour
         _actionController.UI.ShowInventory.performed += ctx => showInventory = ctx.ReadValueAsButton();
         _actionController.UI.ShowInventory.canceled += ctx => showInventory = false;
         //_actionController.Player.Putaway.canceled += ctx => showInventory = false;
-        _actionController.UI.GetRightItem.performed += ctx => getRightItem = ctx.ReadValueAsButton();
+        _actionController.UI.GetRightItem.performed += ctx =>
+        {
+            getRightItem = ctx.ReadValueAsButton();
+            uiInventory.getBorder().GetComponent<RectTransform>().localPosition += new Vector3(25, 0, 0);
+        };
         _actionController.UI.GetRightItem.canceled += ctx => getRightItem = false;
-        _actionController.UI.GetLeftItem.performed += ctx => getLeftItem = ctx.ReadValueAsButton();
+        _actionController.UI.GetLeftItem.performed += ctx =>
+        {
+            uiInventory.getBorder().GetComponent<RectTransform>().localPosition -= new Vector3(25, 0, 0);
+            getLeftItem = ctx.ReadValueAsButton();
+        };
         _actionController.UI.GetRightItem.canceled += ctx => getLeftItem = false;
 
 

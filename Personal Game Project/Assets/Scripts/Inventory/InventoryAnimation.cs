@@ -28,11 +28,11 @@ public class InventoryAnimation : MonoBehaviour
             {
                 if (getRightItem)
                 {
-                    uiInventory.getBorder().transform.position += new Vector3(18, 0, 0);
+                    //uiInventory.getBorder().transform.position += new Vector3(18, 0, 0);
                 }
                 else if (getLeftItem)
                 {
-                    uiInventory.getBorder().transform.position -= new Vector3(18, 0, 0);
+                    //uiInventory.getBorder().transform.position -= new Vector3(18, 0, 0);
                 }
             }
         }
