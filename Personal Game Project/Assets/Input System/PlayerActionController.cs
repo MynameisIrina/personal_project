@@ -241,6 +241,24 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SelectItem"",
+                    ""type"": ""Button"",
+                    ""id"": ""179be6e6-9953-4e74-88cf-7dd7a5a1598f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""HideInventory"",
+                    ""type"": ""Button"",
+                    ""id"": ""57b8415d-344e-4a14-860d-9b962d80bbdf"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -307,6 +325,28 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""GetLeftItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b8efa320-980e-4867-a269-d4b2cf7f962c"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SelectItem"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f5ca6981-0fd2-4df1-9730-e8a0707021e5"",
+                    ""path"": ""<Gamepad>/dpad/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""HideInventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -392,6 +432,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         m_UI_ShowInventory = m_UI.FindAction("ShowInventory", throwIfNotFound: true);
         m_UI_GetRightItem = m_UI.FindAction("GetRightItem", throwIfNotFound: true);
         m_UI_GetLeftItem = m_UI.FindAction("GetLeftItem", throwIfNotFound: true);
+        m_UI_SelectItem = m_UI.FindAction("SelectItem", throwIfNotFound: true);
+        m_UI_HideInventory = m_UI.FindAction("HideInventory", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -551,6 +593,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
     private readonly InputAction m_UI_ShowInventory;
     private readonly InputAction m_UI_GetRightItem;
     private readonly InputAction m_UI_GetLeftItem;
+    private readonly InputAction m_UI_SelectItem;
+    private readonly InputAction m_UI_HideInventory;
     public struct UIActions
     {
         private @PlayerActionController m_Wrapper;
@@ -558,6 +602,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         public InputAction @ShowInventory => m_Wrapper.m_UI_ShowInventory;
         public InputAction @GetRightItem => m_Wrapper.m_UI_GetRightItem;
         public InputAction @GetLeftItem => m_Wrapper.m_UI_GetLeftItem;
+        public InputAction @SelectItem => m_Wrapper.m_UI_SelectItem;
+        public InputAction @HideInventory => m_Wrapper.m_UI_HideInventory;
         public InputActionMap Get() { return m_Wrapper.m_UI; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -576,6 +622,12 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @GetLeftItem.started -= m_Wrapper.m_UIActionsCallbackInterface.OnGetLeftItem;
                 @GetLeftItem.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnGetLeftItem;
                 @GetLeftItem.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnGetLeftItem;
+                @SelectItem.started -= m_Wrapper.m_UIActionsCallbackInterface.OnSelectItem;
+                @SelectItem.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnSelectItem;
+                @SelectItem.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnSelectItem;
+                @HideInventory.started -= m_Wrapper.m_UIActionsCallbackInterface.OnHideInventory;
+                @HideInventory.performed -= m_Wrapper.m_UIActionsCallbackInterface.OnHideInventory;
+                @HideInventory.canceled -= m_Wrapper.m_UIActionsCallbackInterface.OnHideInventory;
             }
             m_Wrapper.m_UIActionsCallbackInterface = instance;
             if (instance != null)
@@ -589,6 +641,12 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @GetLeftItem.started += instance.OnGetLeftItem;
                 @GetLeftItem.performed += instance.OnGetLeftItem;
                 @GetLeftItem.canceled += instance.OnGetLeftItem;
+                @SelectItem.started += instance.OnSelectItem;
+                @SelectItem.performed += instance.OnSelectItem;
+                @SelectItem.canceled += instance.OnSelectItem;
+                @HideInventory.started += instance.OnHideInventory;
+                @HideInventory.performed += instance.OnHideInventory;
+                @HideInventory.canceled += instance.OnHideInventory;
             }
         }
     }
@@ -655,5 +713,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         void OnShowInventory(InputAction.CallbackContext context);
         void OnGetRightItem(InputAction.CallbackContext context);
         void OnGetLeftItem(InputAction.CallbackContext context);
+        void OnSelectItem(InputAction.CallbackContext context);
+        void OnHideInventory(InputAction.CallbackContext context);
     }
 }

@@ -219,6 +219,24 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "SelectItem",
+                    "type": "Button",
+                    "id": "179be6e6-9953-4e74-88cf-7dd7a5a1598f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "HideInventory",
+                    "type": "Button",
+                    "id": "57b8415d-344e-4a14-860d-9b962d80bbdf",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -285,6 +303,28 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "GetLeftItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "b8efa320-980e-4867-a269-d4b2cf7f962c",
+                    "path": "<Gamepad>/buttonSouth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Gamepad",
+                    "action": "SelectItem",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "f5ca6981-0fd2-4df1-9730-e8a0707021e5",
+                    "path": "<Gamepad>/dpad/down",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "HideInventory",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

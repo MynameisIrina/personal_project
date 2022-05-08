@@ -12,6 +12,8 @@ public class InventoryAnimation : MonoBehaviour
 
     private bool getRightItem;
     private bool getLeftItem;
+    private bool selectItem;
+    private bool hideInventory;
 
     void Awake()
     {
@@ -24,17 +26,10 @@ public class InventoryAnimation : MonoBehaviour
         if (showInventory)
         {
             ui_animator.SetBool("show_inventory", true);
-            if (uiInventory.getInventory().itemList.Count > 1)
-            {
-                if (getRightItem)
-                {
-                    //uiInventory.getBorder().transform.position += new Vector3(18, 0, 0);
-                }
-                else if (getLeftItem)
-                {
-                    //uiInventory.getBorder().transform.position -= new Vector3(18, 0, 0);
-                }
-            }
+        }
+        if (hideInventory)
+        {
+            ui_animator.SetBool("show_inventory", false);
         }
     }
 
@@ -48,4 +43,10 @@ public class InventoryAnimation : MonoBehaviour
         getRightItem = _rightItem;
         getLeftItem = _leftItem;
     }
+
+    public void ReceiveHideInventory(bool _hide_inventory)
+    {
+        hideInventory = _hide_inventory;
+    }
+    
 }
