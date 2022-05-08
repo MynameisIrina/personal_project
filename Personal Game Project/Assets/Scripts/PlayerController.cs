@@ -48,7 +48,6 @@ public class PlayerController : MonoBehaviour
     
     // CLIMB
     [SerializeField] private GameObject rayGeneral;
-    [SerializeField] private GameObject ladder;
     private GameObject objectInFrontOfPlayer;
     private bool ladderCollision;
     private bool climbLadder;
@@ -63,9 +62,6 @@ public class PlayerController : MonoBehaviour
     private RaycastHit hit;
     [SerializeField] private GameObject rayCastOrigin;
     
-
-
-
     void Awake()
     {
         
@@ -85,8 +81,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<PickUpWeapon>().enabled = false;
         GetComponent<ClimbLadder>().enabled = false;
     }
-
-
+    
 
     private void FixedUpdate()
     {
@@ -105,12 +100,11 @@ public class PlayerController : MonoBehaviour
         MovePlayer();
         ClimbStairs();
         
-
     }
 
     private void Update()
     {
-        // detect objects in front of you
+        // detect objects in front of the player
         RaycastHit objectsHit;
         if (Physics.Raycast(rayGeneral.transform.position, transform.TransformDirection(Vector3.forward), out objectsHit,
                 7f))
@@ -315,10 +309,6 @@ public class PlayerController : MonoBehaviour
         return inventory;
     }
 
-    public Animator GetAnimator()
-    {
-        return animator;
-    }
     
 
 

@@ -11,11 +11,10 @@ public class SelectItem : MonoBehaviour
     private GameObject quiver_arrow;
     private GameObject sword;
     private GameObject selectedItem;
-
     private bool selectItem;
-
     private Item.ItemType currentItem;
-    // Start is called before the first frame update
+    
+    
     void Start()
     {
         bow = weaponInHand.Find("bow").gameObject;
@@ -26,6 +25,10 @@ public class SelectItem : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
+         * select item from inventory based on the current position of the border
+         */
+        
         if (selectItem)
         {
             if (currentItem == Item.ItemType.Arrow)

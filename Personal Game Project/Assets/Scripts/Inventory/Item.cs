@@ -11,7 +11,7 @@ public class Item
         Potion
 
     }
-
+    
     public ItemType itemType;
 
     public Sprite GetSprite()

@@ -12,11 +12,9 @@ public class InputManager : MonoBehaviour
     [SerializeField] private PlayerController player_controller;
     [SerializeField] private CameraController camera_controller;
     [SerializeField] private Arrow arrow_controller;
-    [SerializeField] private InventoryAnimation _inventoryAnimation;
-    [SerializeField] private SelectItem SelectItemScript;
     private Vector2 move_value;
     private bool jump_input;
-    private Vector2 look_input;
+    private Vector2 look_input; 
     public bool aim_input { get; private set; }
     private bool fire_input;
     private bool put_away;
@@ -25,14 +23,17 @@ public class InputManager : MonoBehaviour
     
     // UI
     [SerializeField] private UI_Inventory uiInventory;
+    [SerializeField] private InventoryAnimation _inventoryAnimation;
+    [SerializeField] private SelectItem SelectItemScript;
+    private Item.ItemType currentItem;
     private bool showInventory;
     private bool getRightItem;
     private bool getLeftItem;
     private bool selectItem;
     private bool hideInventory;
     private int counter = 1;
-    private Item.ItemType currentItem;
-    // Start is called before the first frame update
+
+
     void Awake()
     {
         _actionController = new PlayerActionController();
@@ -86,7 +87,10 @@ public class InputManager : MonoBehaviour
         
         _actionController.UI.ShowInventory.performed += ctx => showInventory = ctx.ReadValueAsButton();
         _actionController.UI.ShowInventory.canceled += ctx => showInventory = false;
-        //_actionController.Player.Putaway.canceled += ctx => showInventory = false;
+        
+        _actionController.Player.Putaway.performed += ctx => showInventory = ctx.ReadValueAsButton();
+        _actionController.Player.Putaway.canceled += ctx => showInventory = false;
+        
         _actionController.UI.GetRightItem.performed += ctx =>
         {
             getRightItem = ctx.ReadValueAsButton();
@@ -106,7 +110,8 @@ public class InputManager : MonoBehaviour
                 getLeftItem = ctx.ReadValueAsButton();
             }
         };
-        _actionController.UI.GetRightItem.canceled += ctx => getLeftItem = false;
+        _actionController.UI.GetLeftItem.canceled += ctx => getLeftItem = false;
+        
         _actionController.UI.SelectItem.performed += ctx =>
         {
             Debug.Log("Counter: " + counter );
@@ -114,6 +119,7 @@ public class InputManager : MonoBehaviour
             currentItem = player_controller.GetInventory().itemList[counter-1].itemType; // track current item
         };
         _actionController.UI.SelectItem.canceled += ctx => selectItem = false;
+        
         _actionController.UI.HideInventory.performed += ctx => hideInventory = ctx.ReadValueAsButton();
         _actionController.UI.HideInventory.canceled += ctx => hideInventory = false;
 

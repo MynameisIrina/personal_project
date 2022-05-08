@@ -9,9 +9,6 @@ public class Inventory
     public Inventory()
     {
         itemList = new List<Item>();
-        // AddItem(new Item{itemType = Item.ItemType.Arrow});
-        // AddItem(new Item{itemType = Item.ItemType.Sword});
-        // AddItem(new Item{itemType = Item.ItemType.Potion});
     }
 
     public void AddItem(Item item)

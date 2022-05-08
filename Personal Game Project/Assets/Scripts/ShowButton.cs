@@ -24,17 +24,17 @@ public class ShowButton : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (show_button)
         {
             button_triangle.GetComponent<Canvas>().enabled = true;
-
         }
         
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.CompareTag("Player"))
         {
             show_button = true;
         }
@@ -44,7 +44,6 @@ public class ShowButton : MonoBehaviour
     {
         show_button = false; 
         button_triangle.GetComponent<Canvas>().enabled = false;
-        //gameObject.GetComponent<OpenNote>().enabled = false;
 
     }
 }

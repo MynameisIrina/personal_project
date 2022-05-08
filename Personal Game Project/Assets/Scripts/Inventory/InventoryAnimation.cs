@@ -23,6 +23,10 @@ public class InventoryAnimation : MonoBehaviour
 
     void Update()
     {
+        /*
+         * add animation to inventory to be able to show/hide and get right/left item
+         */
+        
         if (showInventory)
         {
             ui_animator.SetBool("show_inventory", true);

@@ -13,6 +13,7 @@ TagManager:
   - ClimbStairs
   - Ladder
   - LadderEnd
+  - Fire
   layers:
   - Default
   - TransparentFX
