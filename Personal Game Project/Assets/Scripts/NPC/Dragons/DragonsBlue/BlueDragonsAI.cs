@@ -11,12 +11,18 @@ public class BlueDragonsAI : MonoBehaviour
     private ParticleSystem p;
     [SerializeField] private ParticleSystem fire1;
     [SerializeField] private ParticleSystem fire2;
+    [SerializeField] private ParticleSystem fire3;
     private Animator dragonAnimator1;
     private Animator dragonAnimator2;
-    // private ParticleSystem fire1;
-    // private ParticleSystem fire2;
+    private Animator dragonAnimator3;
     private Dictionary<Transform, uint> flyingDragons; // Key = Dragon; Value = speed
     private uint uniqueSpeed;
+
+    [SerializeField] GameObject ray1;
+    [SerializeField] GameObject ray2;
+    [SerializeField] GameObject ray3;
+
+    
     
     // Timer
     private float timer;
@@ -32,20 +38,18 @@ public class BlueDragonsAI : MonoBehaviour
         GameObject blueDr = GameObject.Find("BlueDragons");
         Transform dragon1 = blueDr.transform.Find("FlyingDragon1");
         dragonAnimator1 = dragon1.GetComponent<Animator>();
-        //fire1 = dragon1.GetComponent<ParticleSystem>();
-        //fire1 = dragon1.Find("Root_Pelvis/Spine/Chest/Neck/Head/UpperMouth/Fire1").GetComponent<ParticleSystem>();
         Transform dragon2 = blueDr.transform.Find("FlyingDragon2");
         dragonAnimator2 = dragon2.GetComponent<Animator>();
-        //fire2 = dragon2.GetComponent<ParticleSystem>();
-        //fire2 = dragon2.Find("Root_Pelvis/Spine/Chest/Neck/Head/UpperMouth/Fire2").GetComponent<ParticleSystem>();
-        flyingDragons.Add(dragon1, 5);
+        Transform dragon3 = blueDr.transform.Find("FlyingDragon3");
+        dragonAnimator3 = dragon3.GetComponent<Animator>();
+        flyingDragons.Add(dragon1, 4);
         flyingDragons.Add(dragon2, 3);
-        
-        // 2 walking dragons; chasing player
+        flyingDragons.Add(dragon3, 6);
+
+        // 3 walking dragons; chasing player
 
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         /*
@@ -61,6 +65,9 @@ public class BlueDragonsAI : MonoBehaviour
             dragonAnimator2.SetBool("fire", true);
             fire2.Play();
             fire2.transform.LookAt(player.transform);
+            dragonAnimator3.SetBool("fire", true);
+            fire3.Play();
+            fire3.transform.LookAt(player.transform);
             timer = 0;
         
         }
@@ -68,6 +75,8 @@ public class BlueDragonsAI : MonoBehaviour
         {
             dragonAnimator1.SetBool("fire", false);
             dragonAnimator2.SetBool("fire", false);
+            dragonAnimator3.SetBool("fire", false);
+
 
         }
         foreach (var dragon in flyingDragons)
@@ -78,6 +87,29 @@ public class BlueDragonsAI : MonoBehaviour
             dragon.Key.Translate(Vector3.forward * Time.deltaTime * uniqueSpeed);
 
         }
+        
+        bool checkRay1 = Physics.Raycast(ray1.transform.position, Vector3.right, 5f);
+        Debug.DrawRay(ray1.transform.position, Vector3.forward);
+        if (checkRay1)
+        {
+            dragonAnimator1.SetBool("Fly Float", false);
+        }
+        // else
+        // {
+        //     dragonAnimator1.SetBool("Fly Float", true);
+        //
+        // }
+        bool checkRay2 = Physics.Raycast(ray2.transform.position, Vector3.right, 5f);
+        if (checkRay2)
+        {
+            dragonAnimator2.SetBool("Fly Float", false);
+        }
+        // else
+        // {
+        //     dragonAnimator2.SetBool("Fly Float", true);
+        //
+        // }
+
     }
     
 }
