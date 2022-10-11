@@ -7,27 +7,25 @@ using UnityEngine.UI;
 public class ShowButton : MonoBehaviour
 {
     [SerializeField] private GameObject button_triangle;
+    [SerializeField] private GameObject note;
 
     private bool show_button;
     // Start is called before the first frame update
     void Start()
     {
-        button_triangle.GetComponent<Canvas>().enabled = false;
+        note.gameObject.SetActive(false);
+        //button_triangle.GetComponent<Canvas>().enabled = false;
         show_button = false;
     }
-
-    private void Awake()
-    {
-        
-    }
+    
 
     // Update is called once per frame
     void Update()
     {
-
         if (show_button)
         {
-            button_triangle.GetComponent<Canvas>().enabled = true;
+            note.gameObject.SetActive(true);
+            //button_triangle.GetComponent<Canvas>().enabled = true;
         }
         
     }
@@ -43,7 +41,8 @@ public class ShowButton : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         show_button = false; 
-        button_triangle.GetComponent<Canvas>().enabled = false;
+        //button_triangle.GetComponent<Canvas>().enabled = false;
+        note.gameObject.SetActive(false);
 
     }
 }

@@ -7,8 +7,9 @@ public class OpenNote : MonoBehaviour
 {
 
     [SerializeField] private GameObject note;
-
     [SerializeField] private PlayerController playerController;
+    
+    
     // Start is called before the first frame update
     void Start()
     {
