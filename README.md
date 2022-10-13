@@ -1,6 +1,7 @@
-# personal_project
+# Revenge
+## Personal Project
 
-## what the game looks like so far
+### what the game looks like so far
 
 <img width="801" alt="Screenshot 2022-10-13 at 10 03 06" src="https://user-images.githubusercontent.com/73833097/195539402-970736af-a3be-432f-b0b3-e2860e579fc1.png">
 
