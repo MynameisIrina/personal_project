@@ -2,6 +2,7 @@
 ## Personal Project
 
 ### what the game looks like so far
+### 13.10.2022
 
 <img width="801" alt="Screenshot 2022-10-13 at 10 03 06" src="https://user-images.githubusercontent.com/73833097/195539402-970736af-a3be-432f-b0b3-e2860e579fc1.png">
 
