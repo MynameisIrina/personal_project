@@ -53,8 +53,6 @@ public class PlayerController : MonoBehaviour
     private bool climbLadder;
     
     
-
-
     [Header("Player Step Climb:")]
     [SerializeField] private GameObject lower_ray;
     [SerializeField] private GameObject higher_ray;
@@ -62,11 +60,14 @@ public class PlayerController : MonoBehaviour
     private RaycastHit hit;
     [SerializeField] private GameObject rayCastOrigin;
     
-    void Awake()
-    {
-        
-
-    }
+    // SWORD ATTACK ATTRIBUTES
+    [SerializeField] private GameObject sword;
+    private bool swordAttack;
+    
+    // ARROW ATTRIBUTES
+    [SerializeField] private GameObject arrow;
+    
+    
 
     private void Start()
     {
@@ -80,6 +81,7 @@ public class PlayerController : MonoBehaviour
         GetComponent<OpenNote>().enabled = false;
         GetComponent<PickUpWeapon>().enabled = false;
         GetComponent<ClimbLadder>().enabled = false;
+        //arrow.GetComponent<ArrowMove>().enabled = false;
     }
     
 
@@ -99,6 +101,18 @@ public class PlayerController : MonoBehaviour
 
         MovePlayer();
         ClimbStairs();
+
+        if (sword.activeSelf && swordAttack)
+        {
+            animator.SetBool("swordAttack", true);
+        }
+        else
+        {
+            animator.SetBool("swordAttack", false);
+
+        }
+        
+        
         
     }
 
@@ -110,6 +124,12 @@ public class PlayerController : MonoBehaviour
                 7f))
         {
             objectInFrontOfPlayer = objectsHit.collider.gameObject;
+        }
+
+        if (fire_input)
+        {
+            Debug.Log("fire TRUE");
+            arrow.transform.position += Vector3.forward;
         }
         
     }
@@ -145,8 +165,6 @@ public class PlayerController : MonoBehaviour
         SetAnimations(speed_blendtree);
         rb.MovePosition(rb.position + (new_position * speed * Time.fixedDeltaTime));
     }
-    
-    
 
     private void ClimbStairs()
     {
@@ -171,6 +189,7 @@ public class PlayerController : MonoBehaviour
         Debug.DrawRay(lower_ray.transform.position, transform.TransformDirection(Vector3.forward), Color.red);
 
     }
+    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -273,18 +292,26 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void ReceiveSwordAttackInput(bool sword_attack)
+    {
+        swordAttack = sword_attack;
+        
+    }
+
     public void ReceiveAimInput(bool _aim)
     {
         aim_input = _aim;
         if (aim_input)
         {
             animator.SetBool("aim", true);
-            crosshair.enabled = true;
+            transform.RotateAround(gameObject.transform.position, Vector3.up, 90);
+            //crosshair.enabled = true;
         }
+        
         else
         {
             animator.SetBool("aim", false);
-            crosshair.enabled = false;
+            //crosshair.enabled = false;
 
         }
     }
@@ -302,6 +329,11 @@ public class PlayerController : MonoBehaviour
     public void ReceivePutAwayInput(bool _put_away)
     {
         put_away = _put_away;
+    }
+
+    public void ReceiveFireInput(bool fire)
+    {
+        fire_input = fire;
     }
 
     public Inventory GetInventory()

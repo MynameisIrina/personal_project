@@ -82,8 +82,8 @@ public class CameraController : MonoBehaviour
         }
         else if(_inputManager.aim_input)
         {
-            camera.SetActive(false);
-            aim_camera.SetActive(true);
+            //camera.SetActive(false);
+            //aim_camera.SetActive(true);
             //camera.transform.position = aim_camera.transform.position;
             //camera.transform.eulerAngles = aim_camera.transform.eulerAngles;
         }

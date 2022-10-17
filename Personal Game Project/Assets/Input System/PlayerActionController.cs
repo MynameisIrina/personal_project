@@ -107,6 +107,15 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""SwordAttack"",
+                    ""type"": ""Button"",
+                    ""id"": ""5619127f-00e5-4a95-acea-78c0fcf7ab03"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -206,6 +215,17 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
                     ""action"": ""Climb"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""64e07273-2732-4d5b-b2c0-da5d0d572017"",
+                    ""path"": ""<Gamepad>/buttonEast"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""SwordAttack"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -427,6 +447,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         m_Player_Pickup = m_Player.FindAction("Pick up", throwIfNotFound: true);
         m_Player_Putaway = m_Player.FindAction("Put away", throwIfNotFound: true);
         m_Player_Climb = m_Player.FindAction("Climb", throwIfNotFound: true);
+        m_Player_SwordAttack = m_Player.FindAction("SwordAttack", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_ShowInventory = m_UI.FindAction("ShowInventory", throwIfNotFound: true);
@@ -502,6 +523,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
     private readonly InputAction m_Player_Pickup;
     private readonly InputAction m_Player_Putaway;
     private readonly InputAction m_Player_Climb;
+    private readonly InputAction m_Player_SwordAttack;
     public struct PlayerActions
     {
         private @PlayerActionController m_Wrapper;
@@ -515,6 +537,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         public InputAction @Pickup => m_Wrapper.m_Player_Pickup;
         public InputAction @Putaway => m_Wrapper.m_Player_Putaway;
         public InputAction @Climb => m_Wrapper.m_Player_Climb;
+        public InputAction @SwordAttack => m_Wrapper.m_Player_SwordAttack;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -551,6 +574,9 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @Climb.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
                 @Climb.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
                 @Climb.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnClimb;
+                @SwordAttack.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwordAttack;
+                @SwordAttack.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwordAttack;
+                @SwordAttack.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnSwordAttack;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -582,6 +608,9 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 @Climb.started += instance.OnClimb;
                 @Climb.performed += instance.OnClimb;
                 @Climb.canceled += instance.OnClimb;
+                @SwordAttack.started += instance.OnSwordAttack;
+                @SwordAttack.performed += instance.OnSwordAttack;
+                @SwordAttack.canceled += instance.OnSwordAttack;
             }
         }
     }
@@ -707,6 +736,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
         void OnPickup(InputAction.CallbackContext context);
         void OnPutaway(InputAction.CallbackContext context);
         void OnClimb(InputAction.CallbackContext context);
+        void OnSwordAttack(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

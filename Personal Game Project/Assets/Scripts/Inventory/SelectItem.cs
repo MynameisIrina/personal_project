@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class SelectItem : MonoBehaviour
 {
+    // TODO заменить на bow etc!!!!!!!!
     [SerializeField] private Transform weaponInHand;
     [SerializeField] private Transform playerSpine;
     private GameObject bow;
@@ -19,7 +20,7 @@ public class SelectItem : MonoBehaviour
     {
         bow = weaponInHand.Find("bow").gameObject;
         quiver_arrow = playerSpine.Find("bow_quiver").gameObject;
-        sword = weaponInHand.Find("sword1").gameObject;
+        sword = weaponInHand.Find("sword").gameObject;
     }
 
     // Update is called once per frame
@@ -43,11 +44,7 @@ public class SelectItem : MonoBehaviour
                 quiver_arrow.SetActive(false);
                 sword.SetActive(true);
             }
-            else if (currentItem == Item.ItemType.Potion)
-            {
-                
-            }
-            
+
         }
         
     }
