@@ -54,8 +54,8 @@ public class CameraController : MonoBehaviour
          *  Original: orbiting around a pivot point approach
          */
         
-        if (!_inputManager.aim_input)
-        {
+       // if (!_inputManager.aim_input)
+        //{
             camera.SetActive(true);
             aim_camera.SetActive(false); 
             
@@ -79,15 +79,8 @@ public class CameraController : MonoBehaviour
             
             
             
-        }
-        else if(_inputManager.aim_input)
-        {
-            //camera.SetActive(false);
-            //aim_camera.SetActive(true);
-            //camera.transform.position = aim_camera.transform.position;
-            //camera.transform.eulerAngles = aim_camera.transform.eulerAngles;
-        }
-        
+        //}
+
     }
 
     public GameObject getCamera()

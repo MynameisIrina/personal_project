@@ -27,8 +27,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] private UI_Inventory uiInventory;
     [SerializeField] private InventoryAnimation _inventoryAnimation;
     [SerializeField] private SelectItem SelectItemScript;
-
-    [SerializeField] private GameObject arrow;
+    
+    
     private Item.ItemType currentItem;
     private bool showInventory;
     private bool getRightItem;
@@ -67,16 +67,16 @@ public class InputManager : MonoBehaviour
         _actionController.Player.Aim.performed += ctx =>
         {
             aim_input = ctx.ReadValueAsButton();
-            gameObject.GetComponent<ArrowInstantiate>().SpawnArrow();
+            arrow_controller.GetOriginalArrow().SetActive(true);
 
         };
         _actionController.Player.Aim.canceled += ctx => aim_input = false;
 
          _actionController.Player.Fire.performed += ctx => 
          {
-             //Debug.Log("Im here InputManager");
-             arrow.GetComponent<ArrowMove>().enabled = true;
              fire_input = ctx.ReadValueAsButton();
+             arrow_controller.GetOriginalArrow().SetActive(false);
+             gameObject.GetComponent<ArrowInstantiate>().SpawnArrow();
          };
         _actionController.Player.Fire.canceled += ctx => fire_input = false;
 
@@ -153,7 +153,8 @@ public class InputManager : MonoBehaviour
         player_controller.ReceivePutAwayInput(put_away);
         player_controller.ReceiveClimbInput(climb);
         player_controller.ReceiveSwordAttackInput(sword_attack);
-        //arrow_controller.ReceiveFireInput(fire_input);
+        arrow_controller.ReceiveFireInput(fire_input);
+        arrow_controller.ReceiveAimInput(aim_input);
         _inventoryAnimation.ReceiveShowInventoryInput(showInventory);
         _inventoryAnimation.ReceiveGetRightLeftItems(getRightItem, getLeftItem);
         _inventoryAnimation.ReceiveHideInventory(hideInventory);

@@ -81,7 +81,6 @@ public class PlayerController : MonoBehaviour
         GetComponent<OpenNote>().enabled = false;
         GetComponent<PickUpWeapon>().enabled = false;
         GetComponent<ClimbLadder>().enabled = false;
-        //arrow.GetComponent<ArrowMove>().enabled = false;
     }
     
 
@@ -266,7 +265,7 @@ public class PlayerController : MonoBehaviour
 
     public void RotateAim()
     {
-        Quaternion rotation = Quaternion.Euler(camera.transform.eulerAngles.x, camera.transform.eulerAngles.y, 1);
+        Quaternion rotation = Quaternion.Euler(1, camera.transform.eulerAngles.y, 1);
         rb.MoveRotation(rotation);
     }
 
