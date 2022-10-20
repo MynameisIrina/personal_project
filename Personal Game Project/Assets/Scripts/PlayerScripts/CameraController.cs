@@ -18,6 +18,7 @@ public class CameraController : MonoBehaviour
     private float look_vert;
     private float distance_to_target = 7f;
     private RaycastHit hit;
+    private bool aimInput;
 
     private void Start()
     {
@@ -29,6 +30,21 @@ public class CameraController : MonoBehaviour
     public void receiveInputLook(Vector2 _look)
     {
         look_input = _look;
+    }
+
+    private void Update()
+    {
+        Debug.Log("AIM INPUT: " + aimInput);
+        if (aimInput)
+        {
+            camera.SetActive(false);
+            aim_camera.SetActive(true);
+        }
+        else
+        {
+            camera.SetActive(true);
+            aim_camera.SetActive(false);
+        }
     }
 
 
@@ -43,9 +59,8 @@ public class CameraController : MonoBehaviour
         look_vert = Mathf.Clamp(look_vert, -15f, 40f);
         Vector3 target = new Vector3(look_vert, look_hor);
         camera.transform.eulerAngles = target;
-        Vector3 vel = Vector3.zero;
-        // camera.transform.position = Vector3.SmoothDamp(camera.transform.position,
-        //     pivot_point.transform.position - (camera.transform.forward * distance_to_target), ref vel, 0.005f);
+
+        // let camera follow the player
         camera.transform.position = pivot_point.transform.position - (camera.transform.forward * distance_to_target);
 
         /*
@@ -54,13 +69,9 @@ public class CameraController : MonoBehaviour
          *  Original: orbiting around a pivot point approach
          */
         
-       // if (!_inputManager.aim_input)
-        //{
-            camera.SetActive(true);
-            aim_camera.SetActive(false); 
-            
-            
-             // if there is a collision between camera and other object - move the camera closer to the player
+
+
+        // if there is a collision between camera and other object - move the camera closer to the player
              if (Physics.Linecast(camera.transform.position, pivot_point.transform.position, out hit))
             {
                 if (hit.collider.tag != "Player")
@@ -74,12 +85,6 @@ public class CameraController : MonoBehaviour
 
             
             Debug.DrawLine(camera.transform.position, pivot_point.transform.position);
-            //Debug.Log(Physics.Linecast(camera.transform.position, gameObject.transform.position, out hit, player_layerMask));
-            
-            
-            
-            
-        //}
 
     }
 
@@ -91,10 +96,11 @@ public class CameraController : MonoBehaviour
         }
         return camera;
     }
+    
 
-    public Vector2 getLookInput()
+    public void ReceiveAimInput(bool aim_input)
     {
-        return look_input;
+        aimInput = aim_input;
     }
     
     

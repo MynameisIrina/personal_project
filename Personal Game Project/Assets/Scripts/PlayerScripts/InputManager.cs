@@ -46,7 +46,6 @@ public class InputManager : MonoBehaviour
             move_value = ctx.ReadValue<Vector2>();
             Quaternion rotation = Quaternion.Euler(1, camera_controller.getCamera().transform.eulerAngles.y, 1);
             player_controller.GetComponent<Rigidbody>().MoveRotation(rotation);
-
         };
         _actionController.Player.Move.canceled += ctx => move_value = Vector2.zero;
         
@@ -149,6 +148,7 @@ public class InputManager : MonoBehaviour
         camera_controller.receiveInputLook(look_input);
         player_controller.ReceiveInputJump(jump_input);
         player_controller.ReceiveAimInput(aim_input);
+        camera_controller.ReceiveAimInput(aim_input);
         player_controller.ReceivePickUpInput(pick_up);
         player_controller.ReceivePutAwayInput(put_away);
         player_controller.ReceiveClimbInput(climb);

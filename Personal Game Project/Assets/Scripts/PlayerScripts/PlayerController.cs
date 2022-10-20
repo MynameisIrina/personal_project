@@ -66,6 +66,9 @@ public class PlayerController : MonoBehaviour
     
     // ARROW ATTRIBUTES
     [SerializeField] private GameObject arrow;
+
+
+    private Vector3 zeroVector = new Vector3(0, 0, 0);
     
     
 
@@ -143,10 +146,11 @@ public class PlayerController : MonoBehaviour
         camR = camR.normalized;
         
         new_position = (move_value.x * camR + move_value.y * camF);
+        Debug.Log("New position: " + new_position);
 
 
-        // rotate player regardless of camera position.
-        if (!aim_input)
+        // rotate player regardless of camera position
+        if (!aim_input && new_position != zeroVector)
         {
             Quaternion turn = Quaternion.LookRotation(new_position);
             Quaternion target_rotation = Quaternion.RotateTowards(rb.rotation, turn, 360);
@@ -255,7 +259,6 @@ public class PlayerController : MonoBehaviour
         if (speed_blendtree > 0f)
         {
             animator.SetBool("forward", true);
-
         }
         else
         {
@@ -265,8 +268,10 @@ public class PlayerController : MonoBehaviour
 
     public void RotateAim()
     {
-        Quaternion rotation = Quaternion.Euler(1, camera.transform.eulerAngles.y, 1);
+        Quaternion rotation = Quaternion.Euler(camera.transform.eulerAngles.x, camera.transform.eulerAngles.y, 1);
         rb.MoveRotation(rotation);
+        
+
     }
 
     public void ReceiveInputMovement(Vector2 _movement)
