@@ -24,7 +24,7 @@ public class TakeDamage : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.tag);
+        Debug.Log("Tag: " + collision.gameObject.tag);
         if (collision.gameObject.tag == "Weapon")
         {
             healthBar.GetComponent<Image>().fillAmount -= healthAmonuntToReduce;

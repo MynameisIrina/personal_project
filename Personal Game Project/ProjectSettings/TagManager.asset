@@ -16,6 +16,7 @@ TagManager:
   - Fire
   - NPC
   - WayPoints
+  - Enemy
   layers:
   - Default
   - TransparentFX
