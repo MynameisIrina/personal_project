@@ -16,7 +16,8 @@ public class ArrowInstantiate : MonoBehaviour
     [SerializeField] private GameObject originalArrow;
     //[SerializeField] private Transform arrowSpawnPos;
     [SerializeField] private Transform spawnPosition;
-    [SerializeField] private Camera camera;
+    [SerializeField] private Camera aimCamera;
+    [SerializeField] private Transform mockObject;
     private GameObject arrowinst;
     private RaycastHit hit;
     private Vector3 hitPoint;
@@ -24,14 +25,24 @@ public class ArrowInstantiate : MonoBehaviour
     private bool fireInput;
     private bool fire;
     private bool aimInput;
+    private Vector3 worldPos;
 
     private void Start()
     {
         fire = false;
+        
     }
 
     private void Update()
     {
+        Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
+        Ray ray = Camera.main.ScreenPointToRay(screenCenter);
+        if (Physics.Raycast(ray, out hit, 1000f))
+        {
+            mockObject.position = hit.point;
+            worldPos = hit.point;
+            Debug.Log("Hit point: " + hit.point);
+        }
     }
 
     /*
@@ -40,14 +51,14 @@ public class ArrowInstantiate : MonoBehaviour
 
     public void SpawnArrow()
     {
+        
+        
         GameObject arrowInstantiate =
             Instantiate(arrowPrefab, spawnPosition.position, spawnPosition.rotation);
         arrowInstantiate.transform.localScale = new Vector3(2, 2, 8f);
-        arrowinst = arrowInstantiate;
-        //Vector3 fwd = arrowInstantiate.transform.TransformDirection(Vector3.forward);
-        //Ray ray = new Ray(arrowInstantiate.transform.position, arrowInstantiate.transform.forward);
-        if (Physics.Raycast(arrowInstantiate.transform.position, arrowInstantiate.transform.forward, out hit, 1000f))
+        if (Physics.Raycast(aimCamera.transform.position, aimCamera.transform.right, out hit, 1000f))
         {
+            Debug.Log("HITTING: " + hit.collider.gameObject.name);
             arrowInstantiate.GetComponent<ArrowMove>().SetTarget(hit.point);
         
         }

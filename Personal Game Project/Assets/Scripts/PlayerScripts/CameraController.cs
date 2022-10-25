@@ -25,16 +25,11 @@ public class CameraController : MonoBehaviour
         aim_camera.SetActive(false);
 
     }
-
-
-    public void receiveInputLook(Vector2 _look)
-    {
-        look_input = _look;
-    }
+    
 
     private void Update()
     {
-        Debug.Log("AIM INPUT: " + aimInput);
+
         if (aimInput)
         {
             camera.SetActive(false);
@@ -101,6 +96,11 @@ public class CameraController : MonoBehaviour
     public void ReceiveAimInput(bool aim_input)
     {
         aimInput = aim_input;
+    }
+    
+    public void receiveInputLook(Vector2 _look)
+    {
+        look_input = _look;
     }
     
     

@@ -37,7 +37,6 @@ public class PlayerController : MonoBehaviour
 
     // FIRE ATTRIBUTES
     private bool fire_input;
-    private Canvas crosshair;
     private bool stairs;
     
     // PICK UP/PUT AWAY ATTRIBUTES
@@ -66,9 +65,11 @@ public class PlayerController : MonoBehaviour
     
     // ARROW ATTRIBUTES
     [SerializeField] private GameObject arrow;
+    [SerializeField] private GameObject crosshair;
 
 
     private Vector3 zeroVector = new Vector3(0, 0, 0);
+    private Quaternion initialRot;
     
     
 
@@ -77,9 +78,8 @@ public class PlayerController : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         animator = this.GetComponent<Animator>();
         rb.detectCollisions = true;
-        crosshair = FindObjectOfType<Canvas>();
-        crosshair.enabled = false;
         inventory = new Inventory();
+        crosshair.SetActive(false);
         uiInventory.SetInventory(inventory);
         GetComponent<OpenNote>().enabled = false;
         GetComponent<PickUpWeapon>().enabled = false;
@@ -91,6 +91,7 @@ public class PlayerController : MonoBehaviour
     {
         if (aim_input)
         {
+            crosshair.SetActive(true);
             RotateAim();
         }
         
@@ -117,9 +118,9 @@ public class PlayerController : MonoBehaviour
         
         
     }
-
     private void Update()
     {
+
         // detect objects in front of the player
         RaycastHit objectsHit;
         if (Physics.Raycast(rayGeneral.transform.position, transform.TransformDirection(Vector3.forward), out objectsHit,
@@ -135,6 +136,7 @@ public class PlayerController : MonoBehaviour
         }
         
     }
+    
 
     private void MovePlayer()
     {
@@ -146,8 +148,6 @@ public class PlayerController : MonoBehaviour
         camR = camR.normalized;
         
         new_position = (move_value.x * camR + move_value.y * camF);
-        Debug.Log("New position: " + new_position);
-
 
         // rotate player regardless of camera position
         if (!aim_input && new_position != zeroVector)
@@ -266,11 +266,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
     public void RotateAim()
     {
-        Quaternion rotation = Quaternion.Euler(camera.transform.eulerAngles.x, camera.transform.eulerAngles.y, 1);
-        rb.MoveRotation(rotation);
-        
+          Quaternion rotation = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0);
+          rb.MoveRotation(rotation);
 
     }
 
@@ -279,22 +279,22 @@ public class PlayerController : MonoBehaviour
         move_value = _movement;
     }
 
-    public void ReceiveInputJump(bool _jump)
-    {
-        jump = _jump;
-        if (jump && !animator.GetBool("jump"))
-        {
-            animator.SetBool("jump", true);
-            Vector3 jump_vector = Vector3.up * amount_to_jump;
-            rb.AddForce(jump_vector, ForceMode.Impulse);
-
-        }
-        else
-        {
-            animator.SetBool("jump", false);
-
-        }
-    }
+    // public void ReceiveInputJump(bool _jump)
+    // {
+    //     jump = _jump;
+    //     if (jump && !animator.GetBool("jump"))
+    //     {
+    //         animator.SetBool("jump", true);
+    //         Vector3 jump_vector = Vector3.up * amount_to_jump;
+    //         rb.AddForce(jump_vector, ForceMode.Impulse);
+    //
+    //     }
+    //     else
+    //     {
+    //         animator.SetBool("jump", false);
+    //
+    //     }
+    // }
 
     public void ReceiveSwordAttackInput(bool sword_attack)
     {
@@ -309,13 +309,11 @@ public class PlayerController : MonoBehaviour
         {
             animator.SetBool("aim", true);
             transform.RotateAround(gameObject.transform.position, Vector3.up, 90);
-            //crosshair.enabled = true;
         }
         
         else
         {
             animator.SetBool("aim", false);
-            //crosshair.enabled = false;
 
         }
     }

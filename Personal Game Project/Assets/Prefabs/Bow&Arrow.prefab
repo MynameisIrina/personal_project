@@ -117,6 +117,9 @@ MonoBehaviour:
   originalArrow: {fileID: 0}
   speed: 1
   target: {x: 0, y: 0, z: 0}
+  aimCamera: {fileID: 0}
+  crosshair: {fileID: 0}
+  mockObject: {fileID: 0}
 --- !u!1 &7012726511535559491
 GameObject:
   m_ObjectHideFlags: 0
@@ -142,7 +145,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7012726511535559491}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 125.073906, y: 0.06861131, z: 183.26477}
+  m_LocalPosition: {x: 125.073906, y: 0.06861131, z: 183.33}
   m_LocalScale: {x: 2, y: 2, z: 8}
   m_Children:
   - {fileID: 5782244869817636128}
@@ -161,6 +164,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f1ac1e417a9840eabcdff8f4a9a5d46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  originalArrow: {fileID: 0}
-  speed: 20
+  originalArrow: {fileID: 44644591337692695, guid: a4a46e4cc597c40179a9b0518f6c5694, type: 3}
+  speed: 2
   target: {x: 0, y: 0, z: 0}
+  aimCamera: {fileID: 6054876445150090730, guid: 01e25298bd4e2491f86e2191f4a8c0ab, type: 3}
+  crosshair: {fileID: 4146831826375098749, guid: 8619a43cd949e4406aaa35bac37f4c8c, type: 3}
+  mockObject: {fileID: 7560541286789831458, guid: b8cd705417f124541bd46d5e660d09d1, type: 3}

@@ -146,7 +146,7 @@ public class InputManager : MonoBehaviour
     {
         player_controller.ReceiveInputMovement(move_value);
         camera_controller.receiveInputLook(look_input);
-        player_controller.ReceiveInputJump(jump_input);
+        //player_controller.ReceiveInputJump(jump_input);
         player_controller.ReceiveAimInput(aim_input);
         camera_controller.ReceiveAimInput(aim_input);
         player_controller.ReceivePickUpInput(pick_up);

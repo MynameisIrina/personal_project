@@ -15,6 +15,7 @@ TagManager:
   - LadderEnd
   - Fire
   - NPC
+  - WayPoints
   layers:
   - Default
   - TransparentFX
