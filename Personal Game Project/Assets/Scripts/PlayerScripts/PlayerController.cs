@@ -103,7 +103,7 @@ public class PlayerController : MonoBehaviour
         }
 
         MovePlayer();
-        ClimbStairs();
+        //ClimbStairs();
 
         if (sword.activeSelf && swordAttack)
         {
@@ -131,7 +131,6 @@ public class PlayerController : MonoBehaviour
 
         if (fire_input)
         {
-            Debug.Log("fire TRUE");
             arrow.transform.position += Vector3.forward;
         }
         
@@ -169,29 +168,29 @@ public class PlayerController : MonoBehaviour
         rb.MovePosition(rb.position + (new_position * speed * Time.fixedDeltaTime));
     }
 
-    private void ClimbStairs()
-    {
-        RaycastHit lowerHit;
-        if (Physics.Raycast(lower_ray.transform.position, transform.TransformDirection(Vector3.forward), out lowerHit, 1.5f))
-        {
-            RaycastHit higherHit;
-            if (!Physics.Raycast(higher_ray.transform.position, transform.TransformDirection(Vector3.forward), out higherHit, 1.7f))
-            {
-                stairs = true;
-                if (animator.GetBool("forward"))
-                {
-                    rb.position -= new Vector3(0, -step, 0);
-                }
-            }
-        }
-        else
-        {
-            stairs = false;
-        }
-        
-        Debug.DrawRay(lower_ray.transform.position, transform.TransformDirection(Vector3.forward), Color.red);
+    // private void ClimbStairs()
+    // {
+    //     RaycastHit lowerHit;
+    //     if (Physics.Raycast(lower_ray.transform.position, transform.TransformDirection(Vector3.forward), out lowerHit, 1.5f))
+    //     {
+    //         RaycastHit higherHit;
+    //         if (!Physics.Raycast(higher_ray.transform.position, transform.TransformDirection(Vector3.forward), out higherHit, 1.7f))
+    //         {
+    //             stairs = true;
+    //             if (animator.GetBool("forward"))
+    //             {
+    //                 rb.position -= new Vector3(0, -step, 0);
+    //             }
+    //         }
+    //     }
+    //     else
+    //     {
+    //         stairs = false;
+    //     }
+    //     
+    //     Debug.DrawRay(lower_ray.transform.position, transform.TransformDirection(Vector3.forward), Color.red);
 
-    }
+    //}
     
 
     private void OnTriggerEnter(Collider other)
@@ -300,6 +299,11 @@ public class PlayerController : MonoBehaviour
     {
         swordAttack = sword_attack;
         
+    }
+
+    public bool getSwordAttack()
+    {
+        return swordAttack;
     }
 
     public void ReceiveAimInput(bool _aim)

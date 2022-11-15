@@ -6,46 +6,41 @@ using UnityEngine.UI;
 
 public class SwordController : MonoBehaviour
 {
-    [SerializeField] private Canvas enemyHealthBar;
     [SerializeField] private Animator enemyAnimator;
-    private int count;
+    [SerializeField] private PlayerController playerController;
+    [SerializeField] private Canvas enemyHealthBar;
+    private bool isAttacking;
 
-    private bool hit;
-    // Start is called before the first frame update
-    void Start()
+    private void Update()
     {
-        count = 0;
-        hit = false;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (hit)
+        if (playerController.getSwordAttack())
         {
-            if (enemyHealthBar.GetComponent<Image>().fillAmount == 0)
-            {
-                enemyAnimator.SetBool("isDying", true);
-            }
-            enemyAnimator.SetBool("isGettingHit", true);
+            isAttacking = true;
         }
-        else
+        
+        if (enemyHealthBar.GetComponent<Image>().fillAmount <= 0f)
         {
-            enemyAnimator.SetBool("isGettingHit", false);
+            enemyAnimator.GetComponent<Animator>().SetBool("isDying", true);
+
         }
-
-        hit = false;
-
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Enemy"))
+        if (other.gameObject.CompareTag("Enemy") && isAttacking)
         {
-            count++;
-            hit = true;
-            Debug.Log("HIT " + count);
-            enemyHealthBar.GetComponent<Image>().fillAmount -= 0.15f;
+            other.GetComponent<Animator>().SetBool("isGettingHit", true);
+            enemyHealthBar.GetComponent<Image>().fillAmount -= 0.05f;
+            StartCoroutine(ResetBoolAttacking(other));
         }
     }
+
+    IEnumerator ResetBoolAttacking(Collider other)
+    {
+        yield return new WaitForSeconds(1f);
+        isAttacking = false;
+        other.GetComponent<Animator>().SetBool("isGettingHit", false);
+    }
+    
+
 }

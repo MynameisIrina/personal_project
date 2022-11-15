@@ -6,28 +6,19 @@ using UnityEngine.UI;
 
 public class TakeDamage : MonoBehaviour
 {
-    [SerializeField] private Canvas healthBar;
+    // [SerializeField] private Animator player;
+    // [SerializeField] private Canvas healthBarEnemy;
+    // [SerializeField] private float healthAmonuntToReduce;
+    // private bool hit;
+    // public void takeDamageSword()
+    // {
+    //     healthBarEnemy.GetComponent<Image>().fillAmount -= 0.15f;
+    //     if (healthBarEnemy.GetComponent<Image>().fillAmount > 0)
+    //     {
+    //         GetComponent<Animator>().SetBool("isGettingHit", true);
+    //     }
+    //
+    // }
 
-    private uint healthAmonuntToReduce;
-    // Start is called before the first frame update
-    void Start()
-    {
-        healthAmonuntToReduce = 2;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-        
-    }
-
-    private void OnCollisionEnter(Collision collision)
-    {
-        Debug.Log("Tag: " + collision.gameObject.tag);
-        if (collision.gameObject.tag == "Weapon")
-        {
-            healthBar.GetComponent<Image>().fillAmount -= healthAmonuntToReduce;
-        }
-    }
+    
 }
