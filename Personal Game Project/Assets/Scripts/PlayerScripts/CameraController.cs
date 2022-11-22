@@ -7,8 +7,8 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private InputManager _inputManager;
-    [SerializeField] private GameObject camera;
-    [SerializeField] private GameObject aim_camera;
+    [SerializeField] private Camera camera;
+    [SerializeField] private Camera aim_camera;
     [SerializeField] GameObject pivot_point;
     [SerializeField] private GameObject aim_pivot_point;
     private Vector2 look_input;
@@ -19,10 +19,11 @@ public class CameraController : MonoBehaviour
     private float distance_to_target = 7f;
     private RaycastHit hit;
     private bool aimInput;
+    [SerializeField] private GameObject crossHair;
 
     private void Start()
     {
-        aim_camera.SetActive(false);
+        aim_camera.enabled = false;
 
     }
     
@@ -32,42 +33,47 @@ public class CameraController : MonoBehaviour
 
         if (aimInput)
         {
-            camera.SetActive(false);
-            aim_camera.SetActive(true);
+            camera.enabled = false;
+            aim_camera.enabled = true;
         }
         else
         {
-            camera.SetActive(true);
-            aim_camera.SetActive(false);
+            camera.enabled = true;
+            aim_camera.enabled = false;
         }
     }
 
+    [SerializeField] private Vector2 offset;
+    private float yRotation, xRotation;
 
     // Update is called once per frame
     private void LateUpdate()
     {
-        // get an input from the player
-        look_hor += look_input.x;
-        look_vert -= look_input.y;
+        if (camera.enabled)
+        {
+            // get an input from the player
+            look_hor += look_input.x;
+            look_vert -= look_input.y;
         
-        // clamp the view to create a realistic field of view
-        look_vert = Mathf.Clamp(look_vert, -15f, 40f);
-        Vector3 target = new Vector3(look_vert, look_hor);
-        camera.transform.eulerAngles = target;
+            // clamp the view to create a realistic field of view
+            look_vert = Mathf.Clamp(look_vert, -15f, 40f);
+            Vector3 target = new Vector3(look_vert, look_hor);
+            camera.transform.eulerAngles = target;
 
-        // let camera follow the player
-        camera.transform.position = pivot_point.transform.position - (camera.transform.forward * distance_to_target);
+            // let camera follow the player
+            camera.transform.position = pivot_point.transform.position - 
+                                        (camera.transform.forward * distance_to_target);
 
-        /*
-         * Distinguish between two cameras: Aiming and Original.
-         *  Aiming: Bring camera closer to turn on the aim.
-         *  Original: orbiting around a pivot point approach
-         */
+            /*
+             * Distinguish between two cameras: Aiming and Original.
+             *  Aiming: Bring camera closer to turn on the aim.
+             *  Original: orbiting around a pivot point approach
+             */
         
 
 
-        // if there is a collision between camera and other object - move the camera closer to the player
-             if (Physics.Linecast(camera.transform.position, pivot_point.transform.position, out hit))
+            // if there is a collision between camera and other object - move the camera closer to the player
+            if (Physics.Linecast(camera.transform.position, pivot_point.transform.position, out hit))
             {
                 if (hit.collider.tag != "Player")
                 {
@@ -77,13 +83,27 @@ public class CameraController : MonoBehaviour
                 }
 
             }
+        }
 
-            
-            Debug.DrawLine(camera.transform.position, pivot_point.transform.position);
+         else if (aim_camera.enabled)
+         {
+        //     //crossHair.GetComponent<RectTransform>().anchoredPosition = offset;
+        //     // get an input from the player
+             // float rotX = look_input.x * Time.deltaTime * 12;
+             // float rotY = look_input.y * Time.deltaTime * 12;
+             // yRotation += rotX;
+             // xRotation -= rotY;
+             // xRotation = Mathf.Clamp(xRotation, -60f, 60f);
+             // aim_camera.transform.eulerAngles = new Vector3(xRotation, yRotation, 0f);
+        //      // aim_camera.transform.localEulerAngles = Vector3.right * xRotation;
+        //
+        //
+         }
+
 
     }
 
-    public GameObject getCamera()
+    public Camera getCamera()
     {
         if (_inputManager.aim_input)
         {

@@ -1,5 +1,6 @@
 using System;
 using System.Linq.Expressions;
+using Cinemachine.Utility;
 using UnityEngine;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
@@ -71,6 +72,9 @@ public class PlayerController : MonoBehaviour
     private Vector3 zeroVector = new Vector3(0, 0, 0);
     private Quaternion initialRot;
     
+    // GUN ATTRIBUTES
+    [SerializeField] private GameObject gun;
+    
     
 
     private void Start()
@@ -80,6 +84,7 @@ public class PlayerController : MonoBehaviour
         rb.detectCollisions = true;
         inventory = new Inventory();
         crosshair.SetActive(false);
+        gun.SetActive(true);
         uiInventory.SetInventory(inventory);
         GetComponent<OpenNote>().enabled = false;
         GetComponent<PickUpWeapon>().enabled = false;
@@ -91,8 +96,16 @@ public class PlayerController : MonoBehaviour
     {
         if (aim_input)
         {
+            gun.SetActive(true);
             crosshair.SetActive(true);
-            RotateAim();
+            Aiming();
+        }
+        else
+        {
+            animator.SetBool("gunaAim", false);
+            gun.SetActive(false);
+            crosshair.SetActive(false);
+            
         }
         
         bool grounded = Physics.Raycast(rayCastOrigin.transform.position, Vector3.down, 0.5f);
@@ -103,7 +116,6 @@ public class PlayerController : MonoBehaviour
         }
 
         MovePlayer();
-        //ClimbStairs();
 
         if (sword.activeSelf && swordAttack)
         {
@@ -135,12 +147,37 @@ public class PlayerController : MonoBehaviour
         }
         
     }
+
+    [SerializeField] private GameObject mock;
+    [SerializeField] private Transform spawn;
     
 
+    private void Aiming()
+    {
+        rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles 
+                                              + new Vector3(-lookInput.y, lookInput.x, 0f));
+        // if (newDirection != Vector3.zero)
+        // {
+        //     animator.SetBool("arrowMove", true);
+        //     animator.SetFloat("velocityX", move_value.x);
+        //     animator.SetFloat("veloctyZ", move_value.y);
+        // }
+        // else
+        // {
+        //     animator.SetBool("arrowMove", false);
+        //
+        // }
+        
+
+    }
+
+    [SerializeField] private float arrowMovingSpeed;
+    [SerializeField] private CameraController cameraController;
+    private Vector3 lookInput;
     private void MovePlayer()
     {
-        Vector3 camF = camera.transform.forward;
-        Vector3 camR = camera.transform.right;
+        Vector3 camF = cameraController.getCamera().transform.forward;
+        Vector3 camR = cameraController.getCamera().transform.right;
         camF.y = 0;
         camR.y = 0;
         camF = camF.normalized;
@@ -154,18 +191,27 @@ public class PlayerController : MonoBehaviour
             Quaternion turn = Quaternion.LookRotation(new_position);
             Quaternion target_rotation = Quaternion.RotateTowards(rb.rotation, turn, 360);
             rb.MoveRotation(target_rotation);
-        }
-
-
-        /* calculate length of the vector to interpolate
+            
+            /* calculate length of the vector to interpolate
          between walk and run animations. See BlendTree.
          */
             
+        }
+
         float speed_blendtree = Mathf.Clamp01(new_position.magnitude); 
         animator.SetFloat("Walk Magnitude", speed_blendtree);
         
         SetAnimations(speed_blendtree);
-        rb.MovePosition(rb.position + (new_position * speed * Time.fixedDeltaTime));
+        if (aim_input!)
+        {
+            rb.MovePosition(rb.position + (new_position * speed * Time.fixedDeltaTime));
+        }
+        else
+        {
+            rb.MovePosition(rb.position + (new_position * arrowMovingSpeed * Time.fixedDeltaTime));
+
+        }
+
     }
 
     // private void ClimbStairs()
@@ -268,8 +314,8 @@ public class PlayerController : MonoBehaviour
 
     public void RotateAim()
     {
-          Quaternion rotation = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0);
-          rb.MoveRotation(rotation);
+          // Quaternion rotation = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0);
+          // rb.MoveRotation(rotation);
 
     }
 
@@ -300,6 +346,10 @@ public class PlayerController : MonoBehaviour
         swordAttack = sword_attack;
         
     }
+    public void receiveInputLook2(Vector2 _look)
+    {
+        lookInput = _look;
+    }
 
     public bool getSwordAttack()
     {
@@ -311,13 +361,13 @@ public class PlayerController : MonoBehaviour
         aim_input = _aim;
         if (aim_input)
         {
-            animator.SetBool("aim", true);
-            transform.RotateAround(gameObject.transform.position, Vector3.up, 90);
+            animator.SetBool("gunAim", true);
+            //transform.RotateAround(gameObject.transform.position, Vector3.up, 90);
         }
         
         else
         {
-            animator.SetBool("aim", false);
+            animator.SetBool("gunAim", false);
 
         }
     }

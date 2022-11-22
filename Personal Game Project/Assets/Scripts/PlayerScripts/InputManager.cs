@@ -12,6 +12,8 @@ public class InputManager : MonoBehaviour
     [SerializeField] private PlayerController player_controller;
     [SerializeField] private CameraController camera_controller;
     [SerializeField] private ArrowInstantiate arrow_controller;
+
+    [SerializeField] private Gun gunController;
     //[SerializeField] private Arrow arrow_controller;
     private Vector2 move_value;
     private bool jump_input;
@@ -66,7 +68,7 @@ public class InputManager : MonoBehaviour
         _actionController.Player.Aim.performed += ctx =>
         {
             aim_input = ctx.ReadValueAsButton();
-            arrow_controller.GetOriginalArrow().SetActive(true);
+            //arrow_controller.GetOriginalArrow().SetActive(true);
 
         };
         _actionController.Player.Aim.canceled += ctx => aim_input = false;
@@ -74,8 +76,8 @@ public class InputManager : MonoBehaviour
          _actionController.Player.Fire.performed += ctx => 
          {
              fire_input = ctx.ReadValueAsButton();
-             arrow_controller.GetOriginalArrow().SetActive(false);
-             gameObject.GetComponent<ArrowInstantiate>().SpawnArrow();
+             // arrow_controller.GetOriginalArrow().SetActive(false);
+             // gameObject.GetComponent<ArrowInstantiate>().SpawnArrow();
          };
         _actionController.Player.Fire.canceled += ctx => fire_input = false;
 
@@ -147,14 +149,17 @@ public class InputManager : MonoBehaviour
         player_controller.ReceiveInputMovement(move_value);
         camera_controller.receiveInputLook(look_input);
         //player_controller.ReceiveInputJump(jump_input);
+        player_controller.receiveInputLook2(look_input);
         player_controller.ReceiveAimInput(aim_input);
         camera_controller.ReceiveAimInput(aim_input);
         player_controller.ReceivePickUpInput(pick_up);
         player_controller.ReceivePutAwayInput(put_away);
         player_controller.ReceiveClimbInput(climb);
         player_controller.ReceiveSwordAttackInput(sword_attack);
-        arrow_controller.ReceiveFireInput(fire_input);
-        arrow_controller.ReceiveAimInput(aim_input);
+        gunController.receiveFireInput(fire_input);
+        //player_controller.ReceiveFireInput(fire_input);
+        //arrow_controller.ReceiveFireInput(fire_input);
+        //arrow_controller.ReceiveAimInput(aim_input);
         _inventoryAnimation.ReceiveShowInventoryInput(showInventory);
         _inventoryAnimation.ReceiveGetRightLeftItems(getRightItem, getLeftItem);
         _inventoryAnimation.ReceiveHideInventory(hideInventory);
