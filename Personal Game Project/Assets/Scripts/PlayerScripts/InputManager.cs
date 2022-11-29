@@ -11,12 +11,11 @@ public class InputManager : MonoBehaviour
     private PlayerActionController _actionController;
     [SerializeField] private PlayerController player_controller;
     [SerializeField] private CameraController camera_controller;
-    [SerializeField] private ArrowInstantiate arrow_controller;
+    [SerializeField] private GunController gun_controller;
+    [SerializeField] private ArrowController arrow_controller;
 
-    [SerializeField] private Gun gunController;
     //[SerializeField] private Arrow arrow_controller;
     private Vector2 move_value;
-    private bool jump_input;
     private Vector2 look_input; 
     public bool aim_input { get; private set; }
     private bool fire_input;
@@ -62,8 +61,6 @@ public class InputManager : MonoBehaviour
            
        };
        
-       _actionController.Player.Jump.performed += ctx => jump_input = ctx.ReadValueAsButton();
-        _actionController.Player.Jump.canceled += ctx => jump_input = false;
         
         _actionController.Player.Aim.performed += ctx =>
         {
@@ -76,8 +73,12 @@ public class InputManager : MonoBehaviour
          _actionController.Player.Fire.performed += ctx => 
          {
              fire_input = ctx.ReadValueAsButton();
-             // arrow_controller.GetOriginalArrow().SetActive(false);
-             // gameObject.GetComponent<ArrowInstantiate>().SpawnArrow();
+             if (currentItem == Item.ItemType.Arrow && player_controller.getMoveValues() == Vector2.zero)
+             {
+                 arrow_controller.Shoot();
+             }
+             //gun_controller.Shoot();
+
          };
         _actionController.Player.Fire.canceled += ctx => fire_input = false;
 
@@ -128,6 +129,7 @@ public class InputManager : MonoBehaviour
             Debug.Log("Counter: " + counter );
             selectItem = ctx.ReadValueAsButton();
             currentItem = player_controller.GetInventory().itemList[counter-1].itemType; // track current item
+            player_controller.setCurrentItem(currentItem);
         };
         _actionController.UI.SelectItem.canceled += ctx => selectItem = false;
         
@@ -156,18 +158,18 @@ public class InputManager : MonoBehaviour
         player_controller.ReceivePutAwayInput(put_away);
         player_controller.ReceiveClimbInput(climb);
         player_controller.ReceiveSwordAttackInput(sword_attack);
-        gunController.receiveFireInput(fire_input);
-        //player_controller.ReceiveFireInput(fire_input);
+        //gunController.receiveFireInput(fire_input);
+        player_controller.ReceiveFireInput(fire_input);
         //arrow_controller.ReceiveFireInput(fire_input);
-        //arrow_controller.ReceiveAimInput(aim_input);
+        arrow_controller.ReceiveAimInput(aim_input);
         _inventoryAnimation.ReceiveShowInventoryInput(showInventory);
         _inventoryAnimation.ReceiveGetRightLeftItems(getRightItem, getLeftItem);
         _inventoryAnimation.ReceiveHideInventory(hideInventory);
         SelectItemScript.ReceiveSelectItem(selectItem, currentItem);
         
     }
-    
-    
+
+
     private void OnEnable()
     {
         _actionController.Enable();

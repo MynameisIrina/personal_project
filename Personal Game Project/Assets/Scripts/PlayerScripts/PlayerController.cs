@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Linq.Expressions;
 using Cinemachine.Utility;
 using UnityEngine;
@@ -37,7 +38,7 @@ public class PlayerController : MonoBehaviour
     private bool aim_input;
 
     // FIRE ATTRIBUTES
-    private bool fire_input;
+    private bool fireInput;
     private bool stairs;
     
     // PICK UP/PUT AWAY ATTRIBUTES
@@ -45,6 +46,7 @@ public class PlayerController : MonoBehaviour
     public bool put_away { get; private set; }
     private Inventory inventory;
     [SerializeField] private UI_Inventory uiInventory;
+    private Item.ItemType currentItem;
     
     // CLIMB
     [SerializeField] private GameObject rayGeneral;
@@ -84,7 +86,7 @@ public class PlayerController : MonoBehaviour
         rb.detectCollisions = true;
         inventory = new Inventory();
         crosshair.SetActive(false);
-        gun.SetActive(true);
+        gun.SetActive(false);
         uiInventory.SetInventory(inventory);
         GetComponent<OpenNote>().enabled = false;
         GetComponent<PickUpWeapon>().enabled = false;
@@ -94,14 +96,15 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (aim_input)
+        if (aim_input && currentItem == Item.ItemType.Arrow)
         {
-            gun.SetActive(true);
-            crosshair.SetActive(true);
+            //gun.SetActive(true);
+            //crosshair.SetActive(true);
             Aiming();
         }
         else
         {
+            rb.rotation = Quaternion.Euler(0f, rb.rotation.y, rb.rotation.z);
             animator.SetBool("gunaAim", false);
             gun.SetActive(false);
             crosshair.SetActive(false);
@@ -140,34 +143,26 @@ public class PlayerController : MonoBehaviour
         {
             objectInFrontOfPlayer = objectsHit.collider.gameObject;
         }
-
-        if (fire_input)
-        {
-            arrow.transform.position += Vector3.forward;
-        }
+        
         
     }
-
-    [SerializeField] private GameObject mock;
-    [SerializeField] private Transform spawn;
     
-
     private void Aiming()
     {
         rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles 
                                               + new Vector3(-lookInput.y, lookInput.x, 0f));
-        // if (newDirection != Vector3.zero)
-        // {
-        //     animator.SetBool("arrowMove", true);
-        //     animator.SetFloat("velocityX", move_value.x);
-        //     animator.SetFloat("veloctyZ", move_value.y);
-        // }
-        // else
-        // {
-        //     animator.SetBool("arrowMove", false);
-        //
-        // }
         
+        if (new Vector2(move_value.x, move_value.y) != Vector2.zero)
+        {
+            animator.SetBool("arrowMove", true);
+            animator.SetFloat("velocityX", move_value.x);
+            animator.SetFloat("veloctyZ", move_value.y);
+        }
+        else
+        {
+            animator.SetBool("arrowMove", false);
+        
+        }
 
     }
 
@@ -208,10 +203,16 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            
             rb.MovePosition(rb.position + (new_position * arrowMovingSpeed * Time.fixedDeltaTime));
 
         }
 
+    }
+
+    public Vector2 getMoveValues()
+    {
+        return new Vector2(move_value.x, move_value.y);
     }
 
     // private void ClimbStairs()
@@ -284,17 +285,17 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.GetComponent<PickUpWeapon>().enabled = false;
         }
-        if (other.CompareTag("Ladder"))
-        {
-            ladderCollision = false;
-            animator.SetBool("climb", false);
-        }
-
-        if (other.CompareTag("LadderEnd"))
-        {
-            //rb.useGravity = true;
-            animator.SetBool("clamber", false);
-        }
+        // if (other.CompareTag("Ladder"))
+        // {
+        //     ladderCollision = false;
+        //     animator.SetBool("climb", false);
+        // }
+        //
+        // if (other.CompareTag("LadderEnd"))
+        // {
+        //     //rb.useGravity = true;
+        //     animator.SetBool("clamber", false);
+        // }
 
         
     }
@@ -310,13 +311,11 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("forward", false);
         }
     }
+    
 
-
-    public void RotateAim()
+    public void setCurrentItem(Item.ItemType item)
     {
-          // Quaternion rotation = Quaternion.Euler(0, camera.transform.eulerAngles.y, 0);
-          // rb.MoveRotation(rotation);
-
+        currentItem = item;
     }
 
     public void ReceiveInputMovement(Vector2 _movement)
@@ -359,15 +358,14 @@ public class PlayerController : MonoBehaviour
     public void ReceiveAimInput(bool _aim)
     {
         aim_input = _aim;
-        if (aim_input)
+        if (aim_input && currentItem == Item.ItemType.Arrow)
         {
-            animator.SetBool("gunAim", true);
-            //transform.RotateAround(gameObject.transform.position, Vector3.up, 90);
+            animator.SetBool("arrowAim", true);
+            
         }
-        
         else
         {
-            animator.SetBool("gunAim", false);
+            animator.SetBool("arrowAim", false);
 
         }
     }
@@ -387,9 +385,27 @@ public class PlayerController : MonoBehaviour
         put_away = _put_away;
     }
 
-    public void ReceiveFireInput(bool fire)
+    [SerializeField] private GameObject arrowInHand;
+    public void ReceiveFireInput(bool fire_input)
     {
-        fire_input = fire;
+        fireInput = fire_input;
+        if (fire_input && getMoveValues() == Vector2.zero)
+        {
+            arrowInHand.SetActive(false);
+            animator.SetTrigger("arrowFire");
+            StartCoroutine(waitForAnimation());
+        }
+    }
+
+    IEnumerator waitForAnimation()
+    {
+        yield return new WaitForSeconds(1);
+        animator.ResetTrigger("arrowFire");
+    }
+
+    void HandArrowActive()
+    {
+        arrowInHand.SetActive(true);
     }
 
     public Inventory GetInventory()
