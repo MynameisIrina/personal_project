@@ -9,9 +9,11 @@ public class CameraController : MonoBehaviour
     [SerializeField] private GameObject player;
     [SerializeField] private InputManager _inputManager;
     [SerializeField] private Camera camera;
-    [SerializeField] private Camera aim_camera;
+    [SerializeField] private Camera gun_camera;
+    [SerializeField] private Camera arrow_camera;
     [SerializeField] GameObject pivot_point;
     [SerializeField] private GameObject aim_pivot_point;
+    private PlayerController playerController;
     private Vector2 look_input;
     private float look_hor;
     private float prev_hor;
@@ -24,7 +26,9 @@ public class CameraController : MonoBehaviour
 
     private void Start()
     {
-        aim_camera.enabled = false;
+        gun_camera.enabled = false;
+        arrow_camera.enabled = false;
+        playerController = player.GetComponent<PlayerController>();
 
     }
     
@@ -34,13 +38,25 @@ public class CameraController : MonoBehaviour
 
         if (aimInput)
         {
-            camera.enabled = false;
-            aim_camera.enabled = true;
+            if (playerController.getCurrentItem() == Item.ItemType.Arrow)
+            {
+                camera.enabled = false;
+                gun_camera.enabled = false;
+                arrow_camera.enabled = true;
+            }
+            else if (playerController.getCurrentItem() == Item.ItemType.Gun)
+            {
+                camera.enabled = false;
+                gun_camera.enabled = true;
+                arrow_camera.enabled = false;
+            }
+
         }
         else
         {
+            arrow_camera.enabled = false;
+            gun_camera.enabled = false;
             camera.enabled = true;
-            aim_camera.enabled = false;
         }
     }
 
@@ -85,8 +101,8 @@ public class CameraController : MonoBehaviour
             }
         }
 
-         else if (aim_camera.enabled)
-         {
+         // else if (aim_camera.enabled)
+         // {
              
              
              // aim_camera.transform.rotation = Quaternion.Euler(aim_camera.transform.rotation.eulerAngles 
@@ -106,7 +122,7 @@ public class CameraController : MonoBehaviour
              //      // aim_camera.transform.localEulerAngles = Vector3.right * xRotation;
              //
              //
-         }
+         //}
 
 
     }
@@ -115,7 +131,16 @@ public class CameraController : MonoBehaviour
     {
         if (_inputManager.aim_input)
         {
-            return aim_camera;
+            if (playerController.getCurrentItem() == Item.ItemType.Arrow)
+            {
+                return arrow_camera;
+
+            }
+            else if (playerController.getCurrentItem() == Item.ItemType.Gun)
+            {
+                return gun_camera;
+
+            }
         }
         return camera;
     }

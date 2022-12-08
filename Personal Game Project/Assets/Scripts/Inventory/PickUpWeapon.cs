@@ -17,7 +17,6 @@ public class PickUpWeapon : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        bow = GameObject.Find("BowWeapon");
         weapons = GameObject.FindGameObjectsWithTag("Weapon");
     }
 
@@ -50,6 +49,11 @@ public class PickUpWeapon : MonoBehaviour
                     else if (weapon.name.Contains("Sword"))
                     {
                         typeOfWeapon = Item.ItemType.Sword;
+                    }
+                    else if (weapon.name.Contains("Gun"))
+                    {
+                        typeOfWeapon = Item.ItemType.Gun;
+
                     }
                     
                     playerController.GetInventory().AddItem(new Item {itemType = typeOfWeapon});

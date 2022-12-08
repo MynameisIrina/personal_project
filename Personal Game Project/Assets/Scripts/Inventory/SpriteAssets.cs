@@ -9,6 +9,7 @@ public class SpriteAssets : MonoBehaviour
     public Sprite arrow;
     public Sprite sword;
     public Sprite potion;
+    public Sprite gun;
 
 
     private void Awake()

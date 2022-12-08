@@ -65,7 +65,6 @@ public class InputManager : MonoBehaviour
         _actionController.Player.Aim.performed += ctx =>
         {
             aim_input = ctx.ReadValueAsButton();
-            //arrow_controller.GetOriginalArrow().SetActive(true);
 
         };
         _actionController.Player.Aim.canceled += ctx => aim_input = false;
@@ -77,7 +76,10 @@ public class InputManager : MonoBehaviour
              {
                  arrow_controller.Shoot();
              }
-             //gun_controller.Shoot();
+             else if (currentItem == Item.ItemType.Gun && player_controller.getMoveValues() == Vector2.zero)
+             {
+                 gun_controller.Shoot();
+             }
 
          };
         _actionController.Player.Fire.canceled += ctx => fire_input = false;
@@ -126,23 +128,18 @@ public class InputManager : MonoBehaviour
         
         _actionController.UI.SelectItem.performed += ctx =>
         {
-            Debug.Log("Counter: " + counter );
             selectItem = ctx.ReadValueAsButton();
-            currentItem = player_controller.GetInventory().itemList[counter-1].itemType; // track current item
-            player_controller.setCurrentItem(currentItem);
+            if (selectItem)
+            {
+                currentItem = player_controller.GetInventory().itemList[counter-1].itemType; // track current item
+                player_controller.setCurrentItem(currentItem);
+            }
         };
-        _actionController.UI.SelectItem.canceled += ctx => selectItem = false;
         
+        _actionController.UI.SelectItem.canceled += ctx => selectItem = false;
         _actionController.UI.HideInventory.performed += ctx => hideInventory = ctx.ReadValueAsButton();
         _actionController.UI.HideInventory.canceled += ctx => hideInventory = false;
-
-
-
-
-
-
-
-
+        
     }
 
     // Update is called once per frame

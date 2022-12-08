@@ -9,7 +9,7 @@ public class GunController : MonoBehaviour
     private bool fireInput;
     private float range = 999f;
     [SerializeField] private Transform spawnPoint;
-    //[SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private ParticleSystem muzzleFlash;
     [SerializeField] private Camera fpsCam;
 
@@ -22,8 +22,8 @@ public class GunController : MonoBehaviour
             Vector3 direction = hit.point - this.transform.position;
             this.transform.rotation = Quaternion.LookRotation(direction);
             muzzleFlash.Play();
-            //GameObject bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
-            //bullet.GetComponent<Rigidbody>().velocity = spawnPoint.forward * 10;
+            GameObject bullet = Instantiate(bulletPrefab, spawnPoint.position, spawnPoint.rotation);
+            bullet.GetComponent<Rigidbody>().velocity = spawnPoint.forward * 10;
         }
     }
     

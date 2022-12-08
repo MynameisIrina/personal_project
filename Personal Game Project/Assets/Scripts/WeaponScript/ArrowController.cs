@@ -29,7 +29,7 @@ public class ArrowController : MonoBehaviour
             arrow.GetComponent<Rigidbody>().velocity = -spawnPoint.forward * 20;
         }
     }
-
+    
     public void ReceiveFireInput(bool fire_input)
     {
         fireInput = fire_input;

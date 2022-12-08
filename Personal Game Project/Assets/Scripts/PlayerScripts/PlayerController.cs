@@ -98,17 +98,22 @@ public class PlayerController : MonoBehaviour
     {
         if (aim_input && currentItem == Item.ItemType.Arrow)
         {
-            //gun.SetActive(true);
-            //crosshair.SetActive(true);
+            animator.SetBool("arrowAim", true);
             Aiming();
+        }
+        else if (aim_input && currentItem == Item.ItemType.Gun)
+        {
+            Aiming();
+            crosshair.SetActive(true);
+            animator.SetBool("gunAim", true);
         }
         else
         {
-            rb.rotation = Quaternion.Euler(0f, rb.rotation.y, rb.rotation.z);
-            animator.SetBool("gunaAim", false);
-            gun.SetActive(false);
+            rb.rotation = Quaternion.Euler(0f, rb.rotation.y, rb.rotation.z); // set deafult position after aiming
+            animator.SetBool("gunAim", false);
+            animator.SetBool("arrowAim", false);
+            //gun.SetActive(false);
             crosshair.SetActive(false);
-            
         }
         
         bool grounded = Physics.Raycast(rayCastOrigin.transform.position, Vector3.down, 0.5f);
@@ -135,7 +140,6 @@ public class PlayerController : MonoBehaviour
     }
     private void Update()
     {
-
         // detect objects in front of the player
         RaycastHit objectsHit;
         if (Physics.Raycast(rayGeneral.transform.position, transform.TransformDirection(Vector3.forward), out objectsHit,
@@ -151,19 +155,22 @@ public class PlayerController : MonoBehaviour
     {
         rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles 
                                               + new Vector3(-lookInput.y, lookInput.x, 0f));
-        
-        if (new Vector2(move_value.x, move_value.y) != Vector2.zero)
-        {
-            animator.SetBool("arrowMove", true);
-            animator.SetFloat("velocityX", move_value.x);
-            animator.SetFloat("veloctyZ", move_value.y);
-        }
-        else
-        {
-            animator.SetBool("arrowMove", false);
-        
-        }
 
+        
+        if (currentItem == Item.ItemType.Arrow)
+        {
+            if (new Vector2(move_value.x, move_value.y) != Vector2.zero)
+            {
+                animator.SetBool("arrowMove", true);
+                animator.SetFloat("velocityX", move_value.x);
+                animator.SetFloat("veloctyZ", move_value.y);
+            }
+            else
+            {
+                animator.SetBool("arrowMove", false);
+            }
+        }
+        
     }
 
     [SerializeField] private float arrowMovingSpeed;
@@ -285,19 +292,8 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.GetComponent<PickUpWeapon>().enabled = false;
         }
-        // if (other.CompareTag("Ladder"))
-        // {
-        //     ladderCollision = false;
-        //     animator.SetBool("climb", false);
-        // }
-        //
-        // if (other.CompareTag("LadderEnd"))
-        // {
-        //     //rb.useGravity = true;
-        //     animator.SetBool("clamber", false);
-        // }
 
-        
+
     }
 
     private void SetAnimations(float speed_blendtree)
@@ -316,6 +312,11 @@ public class PlayerController : MonoBehaviour
     public void setCurrentItem(Item.ItemType item)
     {
         currentItem = item;
+    }
+
+    public Item.ItemType getCurrentItem()
+    {
+        return currentItem;
     }
 
     public void ReceiveInputMovement(Vector2 _movement)
@@ -358,16 +359,6 @@ public class PlayerController : MonoBehaviour
     public void ReceiveAimInput(bool _aim)
     {
         aim_input = _aim;
-        if (aim_input && currentItem == Item.ItemType.Arrow)
-        {
-            animator.SetBool("arrowAim", true);
-            
-        }
-        else
-        {
-            animator.SetBool("arrowAim", false);
-
-        }
     }
 
     public void ReceiveClimbInput(bool _climb)
@@ -396,17 +387,18 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(waitForAnimation());
         }
     }
+    
+    void TakeArrow()
+    {
+        arrowInHand.SetActive(true);
+    }
 
     IEnumerator waitForAnimation()
     {
         yield return new WaitForSeconds(1);
         animator.ResetTrigger("arrowFire");
     }
-
-    void HandArrowActive()
-    {
-        arrowInHand.SetActive(true);
-    }
+    
 
     public Inventory GetInventory()
     {

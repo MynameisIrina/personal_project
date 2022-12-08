@@ -6,10 +6,10 @@ public class Item
 {
     public enum ItemType
     {
-        Arrow,
         Sword,
-        Potion
-
+        Potion,
+        Gun,
+        Arrow
     }
     
     public ItemType itemType;
@@ -21,6 +21,8 @@ public class Item
             case ItemType.Arrow: return SpriteAssets.Instance.arrow;
             case ItemType.Sword: return SpriteAssets.Instance.sword;
             case ItemType.Potion: return SpriteAssets.Instance.potion;
+            case ItemType.Gun: return SpriteAssets.Instance.gun;
+
             default: return null;
             
         }

@@ -8,9 +8,10 @@ public class SelectItem : MonoBehaviour
     // TODO заменить на bow etc!!!!!!!!
     [SerializeField] private Transform weaponInHand;
     [SerializeField] private Transform playerSpine;
-    private GameObject bow;
-    private GameObject quiver_arrow;
-    private GameObject sword;
+    [SerializeField] private GameObject bow;
+    [SerializeField] private GameObject arrow;
+    [SerializeField] private GameObject sword;
+    [SerializeField] private GameObject gun;
     private GameObject selectedItem;
     private bool selectItem;
     private Item.ItemType currentItem;
@@ -18,9 +19,6 @@ public class SelectItem : MonoBehaviour
     
     void Start()
     {
-        bow = weaponInHand.Find("bow").gameObject;
-        quiver_arrow = playerSpine.Find("bow_quiver").gameObject;
-        sword = weaponInHand.Find("sword").gameObject;
     }
 
     // Update is called once per frame
@@ -34,16 +32,26 @@ public class SelectItem : MonoBehaviour
         {
             if (currentItem == Item.ItemType.Arrow)
             {
-                bow.SetActive(true);
-                quiver_arrow.SetActive(true);
+                gun.SetActive(false);
                 sword.SetActive(false);
+                bow.SetActive(true);
+                arrow.SetActive(true);
             }
             else if (currentItem == Item.ItemType.Sword)
             {
+                gun.SetActive(false);
                 bow.SetActive(false);
-                quiver_arrow.SetActive(false);
+                arrow.SetActive(false);
                 sword.SetActive(true);
             }
+            else if (currentItem == Item.ItemType.Gun)
+            {
+                arrow.SetActive(false);
+                sword.SetActive(false);
+                bow.SetActive(false);
+                gun.SetActive(true);
+            }
+            
 
         }
         
