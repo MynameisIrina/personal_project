@@ -12,11 +12,8 @@ public class ArrowController : MonoBehaviour
     [SerializeField] private GameObject arrowPrefab;
     [SerializeField] private Camera fpsCam;
     [SerializeField] private GameObject arrowInHand;
+    [SerializeField] private AudioSource bowReleaseSound;
     
-    // Start is called before the first frame update
-    private void Update()
-    {
-    }
 
     public void Shoot()
     {
@@ -26,10 +23,11 @@ public class ArrowController : MonoBehaviour
             Vector3 direction = hit.point - this.transform.position;
             this.transform.rotation = Quaternion.LookRotation(direction);
             GameObject arrow = Instantiate(arrowPrefab, spawnPoint.position, spawnPoint.rotation);
-            arrow.GetComponent<Rigidbody>().velocity = -spawnPoint.forward * 20;
+            arrow.GetComponent<Rigidbody>().velocity = -spawnPoint.forward * 40;
+            bowReleaseSound.Play();
         }
     }
-    
+
     public void ReceiveFireInput(bool fire_input)
     {
         fireInput = fire_input;

@@ -7,37 +7,36 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [SerializeField] private GameObject player;
-    [SerializeField] private InputManager _inputManager;
+    [SerializeField] private InputManager inputManager;
     [SerializeField] private Camera camera;
     [SerializeField] private Camera gun_camera;
     [SerializeField] private Camera arrow_camera;
     [SerializeField] GameObject pivot_point;
-    [SerializeField] private GameObject aim_pivot_point;
     private PlayerController playerController;
     private Vector2 look_input;
     private float look_hor;
-    private float prev_hor;
-    private float prev_vert;
     private float look_vert;
     private float distance_to_target = 7f;
     private RaycastHit hit;
     private bool aimInput;
-    [SerializeField] private GameObject crossHair;
+    private SelectItem selectItem;
 
     private void Start()
     {
         gun_camera.enabled = false;
         arrow_camera.enabled = false;
         playerController = player.GetComponent<PlayerController>();
+        selectItem = gameObject.GetComponent<SelectItem>();
 
     }
     
 
     private void Update()
     {
-
-        if (aimInput)
+        // check if player is aiming and he picked an item from his inventory
+        if (aimInput && selectItem.ifItemisSelected())
         {
+            
             if (playerController.getCurrentItem() == Item.ItemType.Arrow)
             {
                 camera.enabled = false;
@@ -59,18 +58,15 @@ public class CameraController : MonoBehaviour
             camera.enabled = true;
         }
     }
-
-    [SerializeField] private Vector2 offset;
-    private float yRotation, xRotation;
-
-    // Update is called once per frame
+    
     private void LateUpdate()
     {
-        /*
-            * Distinguish between two cameras: Aiming and Original.
-            *  Original: orbiting around a pivot point approach
-            */
-        
+        moveCamera();
+    }
+
+    private void moveCamera()
+    {
+        // Original: orbiting around a pivot point approach
         if (camera.enabled)
         {
             // get an input from the player
@@ -100,36 +96,11 @@ public class CameraController : MonoBehaviour
 
             }
         }
-
-         // else if (aim_camera.enabled)
-         // {
-             
-             
-             // aim_camera.transform.rotation = Quaternion.Euler(aim_camera.transform.rotation.eulerAngles 
-             //                                                  + new Vector3(-look_input.y, look_input.x, 0f));
-             //
-             // camera.transform.position = pivot_point.transform.position - 
-             //                             (camera.transform.forward * distance_to_target);
-
-             //     //crossHair.GetComponent<RectTransform>().anchoredPosition = offset;
-             //     // get an input from the player
-             // float rotX = look_input.x * Time.deltaTime * 12;
-             // float rotY = look_input.y * Time.deltaTime * 12;
-             // yRotation += rotX;
-             // xRotation -= rotY;
-             // xRotation = Mathf.Clamp(xRotation, -60f, 60f);
-             // aim_camera.transform.eulerAngles = new Vector3(xRotation, yRotation, 0f);
-             //      // aim_camera.transform.localEulerAngles = Vector3.right * xRotation;
-             //
-             //
-         //}
-
-
     }
 
     public Camera getCamera()
     {
-        if (_inputManager.aim_input)
+        if (inputManager.aim_input)
         {
             if (playerController.getCurrentItem() == Item.ItemType.Arrow)
             {
@@ -151,7 +122,8 @@ public class CameraController : MonoBehaviour
         aimInput = aim_input;
     }
     
-    public void receiveInputLook(Vector2 _look)
+    
+    public void ReceiveInputLook(Vector2 _look)
     {
         look_input = _look;
     }

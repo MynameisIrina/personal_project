@@ -8,6 +8,7 @@ public class OpenNote : MonoBehaviour
 
     [SerializeField] private GameObject note;
     [SerializeField] private PlayerController playerController;
+    private bool showNote;
     
     
     // Start is called before the first frame update
@@ -19,16 +20,35 @@ public class OpenNote : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (playerController.pick_up)
+        if (showNote)
         {
-            note.GetComponent<Canvas>().enabled = true;
-        }
+            if (playerController.pickUp)
+            {
+                note.GetComponent<Canvas>().enabled = true;
+            }
 
-        if (playerController.put_away)
+            if (playerController.putAway)
+            {
+                note.GetComponent<Canvas>().enabled = false;
+            }
+        }
+        
+    }
+
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Note"))
         {
-           note.GetComponent<Canvas>().enabled = false;
+            showNote = true;
         }
     }
 
-    
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Note"))
+        {
+            showNote = false;
+        }
+    }
 }

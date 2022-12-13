@@ -129,8 +129,9 @@ public class InputManager : MonoBehaviour
         _actionController.UI.SelectItem.performed += ctx =>
         {
             selectItem = ctx.ReadValueAsButton();
-            if (selectItem)
+            if (selectItem && player_controller.GetInventory().itemList.Count > 0)
             {
+                Debug.Log("Capacity = " + player_controller.GetInventory().itemList.Count);
                 currentItem = player_controller.GetInventory().itemList[counter-1].itemType; // track current item
                 player_controller.setCurrentItem(currentItem);
             }
@@ -146,18 +147,14 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         player_controller.ReceiveInputMovement(move_value);
-        camera_controller.receiveInputLook(look_input);
-        //player_controller.ReceiveInputJump(jump_input);
+        camera_controller.ReceiveInputLook(look_input);
         player_controller.receiveInputLook2(look_input);
         player_controller.ReceiveAimInput(aim_input);
         camera_controller.ReceiveAimInput(aim_input);
         player_controller.ReceivePickUpInput(pick_up);
         player_controller.ReceivePutAwayInput(put_away);
-        player_controller.ReceiveClimbInput(climb);
         player_controller.ReceiveSwordAttackInput(sword_attack);
-        //gunController.receiveFireInput(fire_input);
         player_controller.ReceiveFireInput(fire_input);
-        //arrow_controller.ReceiveFireInput(fire_input);
         arrow_controller.ReceiveAimInput(aim_input);
         _inventoryAnimation.ReceiveShowInventoryInput(showInventory);
         _inventoryAnimation.ReceiveGetRightLeftItems(getRightItem, getLeftItem);

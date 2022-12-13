@@ -13,8 +13,9 @@ public class ShowButton : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        note.gameObject.SetActive(false);
-        //button_triangle.GetComponent<Canvas>().enabled = false;
+        //note.gameObject.SetActive(false);
+        button_triangle.GetComponent<Canvas>().enabled = false;
+        //button_triangle.SetActive(false);
         show_button = false;
     }
     
@@ -24,8 +25,9 @@ public class ShowButton : MonoBehaviour
     {
         if (show_button)
         {
-            note.gameObject.SetActive(true);
-            //button_triangle.GetComponent<Canvas>().enabled = true;
+            //note.gameObject.SetActive(true);
+            button_triangle.GetComponent<Canvas>().enabled = true;
+            //button_triangle.SetActive(true);
         }
         
     }
@@ -41,8 +43,9 @@ public class ShowButton : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         show_button = false; 
-        //button_triangle.GetComponent<Canvas>().enabled = false;
-        note.gameObject.SetActive(false);
+        button_triangle.GetComponent<Canvas>().enabled = false;
+        //button_triangle.SetActive(false);
+        //note.gameObject.SetActive(false);
 
     }
 }

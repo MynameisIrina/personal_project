@@ -18,6 +18,9 @@ TagManager:
   - WayPoints
   - Enemy
   - EnemyClaws
+  - checkpoint1
+  - checkpoint2
+  - checkpoint3
   layers:
   - Default
   - TransparentFX

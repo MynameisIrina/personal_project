@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class SelectItem : MonoBehaviour
 {
-    // TODO заменить на bow etc!!!!!!!!
+    [SerializeField] private PlayerController playerController;
     [SerializeField] private Transform weaponInHand;
     [SerializeField] private Transform playerSpine;
     [SerializeField] private GameObject bow;
@@ -15,8 +15,8 @@ public class SelectItem : MonoBehaviour
     private GameObject selectedItem;
     private bool selectItem;
     private Item.ItemType currentItem;
-    
-    
+
+
     void Start()
     {
     }
@@ -28,7 +28,7 @@ public class SelectItem : MonoBehaviour
          * select item from inventory based on the current position of the border
          */
         
-        if (selectItem)
+        if (selectItem && playerController.GetInventory().itemList.Count > 0)
         {
             if (currentItem == Item.ItemType.Arrow)
             {
@@ -55,6 +55,18 @@ public class SelectItem : MonoBehaviour
 
         }
         
+    }
+
+    public bool ifItemisSelected()
+    {
+        if (gun.activeSelf || bow.activeSelf || sword.activeSelf)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
     
     public void ReceiveSelectItem(bool _selectItem, Item.ItemType _currentItem)

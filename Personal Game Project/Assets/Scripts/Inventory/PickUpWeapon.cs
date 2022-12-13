@@ -7,7 +7,6 @@ public class PickUpWeapon : MonoBehaviour
 {
     [SerializeField] private PlayerController playerController;
     [SerializeField] private UI_Inventory uiInventory;
-    [SerializeField] private GameObject bow;
     [SerializeField] private InventoryAnimation inventoryAnimation;
     private GameObject[] weapons;
     private Item.ItemType typeOfWeapon;
@@ -34,7 +33,7 @@ public class PickUpWeapon : MonoBehaviour
         
         weapons = GameObject.FindGameObjectsWithTag("Weapon");
         
-        if (playerController.pick_up)
+        if (playerController.pickUp)
         {
             foreach (GameObject weapon in weapons)
             {

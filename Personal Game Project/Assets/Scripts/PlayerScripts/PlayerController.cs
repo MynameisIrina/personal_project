@@ -10,72 +10,53 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
-    [SerializeField] private GameObject camera;
     private Vector2 move_value;
     private Animator animator;
     public Vector3 new_position { get; private set; }
     private Vector3 newCam_position;
     private Vector3 target;
-
-    // MOVE ATTRIBUTES
+    // move
     private Rigidbody rb;
     [SerializeField] private float speed;
     private float input_magnitude;
-
-    // JUMP ATTRIBUTES
+    // jump
     [SerializeField] private float amount_to_jump;
     private float distance_to_ground;
     private bool jump;
-    
-    // ROTATION ATTRIBUTES
+    // rotate
     private Quaternion new_camera_position;
-    
-    //LOOK ATTRIBUTES 
+    // look
     private Vector2 look_input;
     float distance_to_target = 5f;
-
-    // AIMING ATTRIBUTES
+    // aim
     private bool aim_input;
-
-    // FIRE ATTRIBUTES
-    private bool fireInput;
-    private bool stairs;
-    
-    // PICK UP/PUT AWAY ATTRIBUTES
-    public bool pick_up { get; private set; }
-    public bool put_away { get; private set; }
+    // pick up/put away
+    public bool pickUp { get; private set; }
+    public bool putAway { get; private set; }
     private Inventory inventory;
     [SerializeField] private UI_Inventory uiInventory;
     private Item.ItemType currentItem;
-    
-    // CLIMB
-    [SerializeField] private GameObject rayGeneral;
-    private GameObject objectInFrontOfPlayer;
-    private bool ladderCollision;
-    private bool climbLadder;
-    
-    
-    [Header("Player Step Climb:")]
-    [SerializeField] private GameObject lower_ray;
-    [SerializeField] private GameObject higher_ray;
-    [SerializeField] private float step;
-    private RaycastHit hit;
-    [SerializeField] private GameObject rayCastOrigin;
-    
-    // SWORD ATTACK ATTRIBUTES
+
+
+
+    // sword attack
     [SerializeField] private GameObject sword;
     private bool swordAttack;
     
-    // ARROW ATTRIBUTES
+    // arrow
     [SerializeField] private GameObject arrow;
     [SerializeField] private GameObject crosshair;
-
-
-    private Vector3 zeroVector = new Vector3(0, 0, 0);
+    
     private Quaternion initialRot;
+    private bool wasAiming;
+    private SelectItem selectItem;
     
     // GUN ATTRIBUTES
     [SerializeField] private GameObject gun;
+    
+    [SerializeField] private float arrowMovingSpeed;
+    [SerializeField] private CameraController cameraController;
+    private Vector3 lookInput;
     
     
 
@@ -91,40 +72,20 @@ public class PlayerController : MonoBehaviour
         GetComponent<OpenNote>().enabled = false;
         GetComponent<PickUpWeapon>().enabled = false;
         GetComponent<ClimbLadder>().enabled = false;
+        wasAiming = false;
+        selectItem = gameObject.GetComponent<SelectItem>();
     }
     
 
     private void FixedUpdate()
     {
-        if (aim_input && currentItem == Item.ItemType.Arrow)
-        {
-            animator.SetBool("arrowAim", true);
-            Aiming();
-        }
-        else if (aim_input && currentItem == Item.ItemType.Gun)
-        {
-            Aiming();
-            crosshair.SetActive(true);
-            animator.SetBool("gunAim", true);
-        }
-        else
-        {
-            rb.rotation = Quaternion.Euler(0f, rb.rotation.y, rb.rotation.z); // set deafult position after aiming
-            animator.SetBool("gunAim", false);
-            animator.SetBool("arrowAim", false);
-            //gun.SetActive(false);
-            crosshair.SetActive(false);
-        }
-        
-        bool grounded = Physics.Raycast(rayCastOrigin.transform.position, Vector3.down, 0.5f);
-        Debug.DrawRay(rayCastOrigin.transform.position, Vector3.down);
-        if (!grounded)
-        {
-            rb.AddForce(Physics.gravity * 2.5f, ForceMode.Acceleration);
-        }
-
+        checkAimingInput();
         MovePlayer();
+        checkSwordAttackAnimation();
+    }
 
+    private void checkSwordAttackAnimation()
+    {
         if (sword.activeSelf && swordAttack)
         {
             animator.SetBool("swordAttack", true);
@@ -132,50 +93,59 @@ public class PlayerController : MonoBehaviour
         else
         {
             animator.SetBool("swordAttack", false);
+        }
+    }
 
-        }
-        
-        
-        
-    }
-    private void Update()
+    private void checkAimingInput()
     {
-        // detect objects in front of the player
-        RaycastHit objectsHit;
-        if (Physics.Raycast(rayGeneral.transform.position, transform.TransformDirection(Vector3.forward), out objectsHit,
-                7f))
+        if (aim_input && currentItem == Item.ItemType.Arrow && selectItem.ifItemisSelected())
         {
-            objectInFrontOfPlayer = objectsHit.collider.gameObject;
+            animator.SetBool("arrowAim", true);
+            if (currentItem == Item.ItemType.Arrow)
+            {
+                if (new Vector2(move_value.x, move_value.y) != Vector2.zero)
+                {
+                    animator.SetBool("arrowMove", true);
+                    animator.SetFloat("velocityX", move_value.x);
+                    animator.SetFloat("veloctyZ", move_value.y);
+                }
+                else
+                {
+                    animator.SetBool("arrowMove", false);
+                }
+            }
+            AimingRotation();
+            wasAiming = true;
         }
-        
-        
+        else if (aim_input && currentItem == Item.ItemType.Gun && selectItem.ifItemisSelected() )
+        {
+            AimingRotation();
+            crosshair.SetActive(true);
+            animator.SetBool("gunAim", true);
+            wasAiming = true;
+        }
+        else
+        {
+            if (wasAiming)
+            {
+                // set deafult position after aiming
+                rb.rotation = Quaternion.Euler(0f, rb.rotation.y, rb.rotation.z);
+                wasAiming = false;
+            }
+            
+            animator.SetBool("gunAim", false);
+            animator.SetBool("arrowAim", false);
+            crosshair.SetActive(false);
+        }
     }
-    
-    private void Aiming()
+
+    private void AimingRotation()
     {
         rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles 
                                               + new Vector3(-lookInput.y, lookInput.x, 0f));
-
-        
-        if (currentItem == Item.ItemType.Arrow)
-        {
-            if (new Vector2(move_value.x, move_value.y) != Vector2.zero)
-            {
-                animator.SetBool("arrowMove", true);
-                animator.SetFloat("velocityX", move_value.x);
-                animator.SetFloat("veloctyZ", move_value.y);
-            }
-            else
-            {
-                animator.SetBool("arrowMove", false);
-            }
-        }
         
     }
-
-    [SerializeField] private float arrowMovingSpeed;
-    [SerializeField] private CameraController cameraController;
-    private Vector3 lookInput;
+    
     private void MovePlayer()
     {
         Vector3 camF = cameraController.getCamera().transform.forward;
@@ -188,33 +158,28 @@ public class PlayerController : MonoBehaviour
         new_position = (move_value.x * camR + move_value.y * camF);
 
         // rotate player regardless of camera position
-        if (!aim_input && new_position != zeroVector)
+        if (!aim_input && new_position != Vector3.zero)
         {
             Quaternion turn = Quaternion.LookRotation(new_position);
             Quaternion target_rotation = Quaternion.RotateTowards(rb.rotation, turn, 360);
             rb.MoveRotation(target_rotation);
-            
-            /* calculate length of the vector to interpolate
-         between walk and run animations. See BlendTree.
-         */
-            
         }
 
-        float speed_blendtree = Mathf.Clamp01(new_position.magnitude); 
-        animator.SetFloat("Walk Magnitude", speed_blendtree);
-        
-        SetAnimations(speed_blendtree);
-        if (aim_input!)
+        SetWalkAnimations();
+        adjustPlayerSpeedAndMove();
+
+    }
+
+    private void adjustPlayerSpeedAndMove()
+    {
+        if (!aim_input)
         {
             rb.MovePosition(rb.position + (new_position * speed * Time.fixedDeltaTime));
         }
         else
         {
-            
             rb.MovePosition(rb.position + (new_position * arrowMovingSpeed * Time.fixedDeltaTime));
-
         }
-
     }
 
     public Vector2 getMoveValues()
@@ -222,30 +187,6 @@ public class PlayerController : MonoBehaviour
         return new Vector2(move_value.x, move_value.y);
     }
 
-    // private void ClimbStairs()
-    // {
-    //     RaycastHit lowerHit;
-    //     if (Physics.Raycast(lower_ray.transform.position, transform.TransformDirection(Vector3.forward), out lowerHit, 1.5f))
-    //     {
-    //         RaycastHit higherHit;
-    //         if (!Physics.Raycast(higher_ray.transform.position, transform.TransformDirection(Vector3.forward), out higherHit, 1.7f))
-    //         {
-    //             stairs = true;
-    //             if (animator.GetBool("forward"))
-    //             {
-    //                 rb.position -= new Vector3(0, -step, 0);
-    //             }
-    //         }
-    //     }
-    //     else
-    //     {
-    //         stairs = false;
-    //     }
-    //     
-    //     Debug.DrawRay(lower_ray.transform.position, transform.TransformDirection(Vector3.forward), Color.red);
-
-    //}
-    
 
     private void OnTriggerEnter(Collider other)
     {
@@ -264,18 +205,6 @@ public class PlayerController : MonoBehaviour
             gameObject.GetComponent<PickUpWeapon>().enabled = true;
             
         }
-        if (other.CompareTag("Ladder"))
-        {
-            ladderCollision = true;
-        }
-
-        if (other.CompareTag("LadderEnd"))
-        {
-            climbLadder = false;
-            ladderCollision = false;
-            animator.SetBool("climb", false);
-            animator.SetBool("clamber", true);
-        }
     }
 
     private void OnTriggerExit(Collider other)
@@ -292,12 +221,18 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.GetComponent<PickUpWeapon>().enabled = false;
         }
-
-
+        
     }
+    
+    
 
-    private void SetAnimations(float speed_blendtree)
+    /* calculate length of the vector to interpolate
+       between walk and run animations. See BlendTree.*/
+    private void SetWalkAnimations()
     {
+        float speed_blendtree = Mathf.Clamp01(new_position.magnitude); 
+        animator.SetFloat("Walk Magnitude", speed_blendtree);
+        
         if (speed_blendtree > 0f)
         {
             animator.SetBool("forward", true);
@@ -324,23 +259,6 @@ public class PlayerController : MonoBehaviour
         move_value = _movement;
     }
 
-    // public void ReceiveInputJump(bool _jump)
-    // {
-    //     jump = _jump;
-    //     if (jump && !animator.GetBool("jump"))
-    //     {
-    //         animator.SetBool("jump", true);
-    //         Vector3 jump_vector = Vector3.up * amount_to_jump;
-    //         rb.AddForce(jump_vector, ForceMode.Impulse);
-    //
-    //     }
-    //     else
-    //     {
-    //         animator.SetBool("jump", false);
-    //
-    //     }
-    // }
-
     public void ReceiveSwordAttackInput(bool sword_attack)
     {
         swordAttack = sword_attack;
@@ -360,26 +278,21 @@ public class PlayerController : MonoBehaviour
     {
         aim_input = _aim;
     }
-
-    public void ReceiveClimbInput(bool _climb)
-    {
-        climbLadder = _climb;
-    }
+    
 
     public void ReceivePickUpInput(bool _pick_up)
     {
-        pick_up = _pick_up;
+        pickUp = _pick_up;
     }
 
     public void ReceivePutAwayInput(bool _put_away)
     {
-        put_away = _put_away;
+        putAway = _put_away;
     }
 
     [SerializeField] private GameObject arrowInHand;
     public void ReceiveFireInput(bool fire_input)
     {
-        fireInput = fire_input;
         if (fire_input && getMoveValues() == Vector2.zero)
         {
             arrowInHand.SetActive(false);

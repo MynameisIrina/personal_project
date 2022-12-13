@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 4344336839444010768}
   - component: {fileID: 4416671589958371222}
   - component: {fileID: 4330455882809468636}
+  - component: {fileID: -675865292272340270}
+  - component: {fileID: 7811620593645860870}
   m_Layer: 0
   m_Name: ArrowPrefab
   m_TagString: Untagged
@@ -117,4 +119,29 @@ Rigidbody:
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 2
+--- !u!65 &-675865292272340270
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331918784670606620}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.04944011, y: 0.03929251, z: 0.030847013}
+  m_Center: {x: 0.00059184816, y: -0.00015199263, z: -0.2836211}
+--- !u!114 &7811620593645860870
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4331918784670606620}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a595e7aab81774eba8862c35fae40c33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

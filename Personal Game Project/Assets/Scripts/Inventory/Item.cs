@@ -6,9 +6,9 @@ public class Item
 {
     public enum ItemType
     {
+        Gun,
         Sword,
         Potion,
-        Gun,
         Arrow
     }
     
