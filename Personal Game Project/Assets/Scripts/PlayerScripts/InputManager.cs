@@ -45,8 +45,8 @@ public class InputManager : MonoBehaviour
         _actionController.Player.Move.performed += ctx =>
         {
             move_value = ctx.ReadValue<Vector2>();
-            Quaternion rotation = Quaternion.Euler(1, camera_controller.getCamera().transform.eulerAngles.y, 1);
-            player_controller.GetComponent<Rigidbody>().MoveRotation(rotation);
+            // Quaternion rotation = Quaternion.Euler(1, camera_controller.GetCamera().transform.eulerAngles.y, 1);
+            // player_controller.GetComponent<Transform>().transform.rotation = Quaternion.RotateTowards(player_controller.GetComponent<Transform>().rotation, rotation, 2f * Time.deltaTime);
         };
         _actionController.Player.Move.canceled += ctx => move_value = Vector2.zero;
         
@@ -72,11 +72,11 @@ public class InputManager : MonoBehaviour
          _actionController.Player.Fire.performed += ctx => 
          {
              fire_input = ctx.ReadValueAsButton();
-             if (currentItem == Item.ItemType.Arrow && player_controller.getMoveValues() == Vector2.zero)
+             if (currentItem == Item.ItemType.Arrow && player_controller.GetMoveValues() == Vector2.zero)
              {
                  arrow_controller.Shoot();
              }
-             else if (currentItem == Item.ItemType.Gun && player_controller.getMoveValues() == Vector2.zero)
+             else if (currentItem == Item.ItemType.Gun && player_controller.GetMoveValues() == Vector2.zero)
              {
                  gun_controller.Shoot();
              }
@@ -133,7 +133,7 @@ public class InputManager : MonoBehaviour
             {
                 Debug.Log("Capacity = " + player_controller.GetInventory().itemList.Count);
                 currentItem = player_controller.GetInventory().itemList[counter-1].itemType; // track current item
-                player_controller.setCurrentItem(currentItem);
+                player_controller.SetCurrentItem(currentItem);
             }
         };
         
@@ -148,7 +148,7 @@ public class InputManager : MonoBehaviour
     {
         player_controller.ReceiveInputMovement(move_value);
         camera_controller.ReceiveInputLook(look_input);
-        player_controller.receiveInputLook2(look_input);
+        player_controller.ReceiveInputLook2(look_input);
         player_controller.ReceiveAimInput(aim_input);
         camera_controller.ReceiveAimInput(aim_input);
         player_controller.ReceivePickUpInput(pick_up);

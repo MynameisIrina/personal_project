@@ -2,7 +2,9 @@ using System;
 using System.Collections;
 using System.Linq.Expressions;
 using Cinemachine.Utility;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
 using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
@@ -10,61 +12,69 @@ using Vector3 = UnityEngine.Vector3;
 
 public class PlayerController : MonoBehaviour
 {
-    private Vector2 move_value;
+    private CharacterController characterController;
+    
+    
+    [Header("Animator Attributes")]
     private Animator animator;
-    public Vector3 new_position { get; private set; }
-    private Vector3 newCam_position;
-    private Vector3 target;
-    // move
+
+    [Header("Movement Attributes")]
     private Rigidbody rb;
+    public Vector3 new_position { get; private set; }
+    private Vector2 move_value;
     [SerializeField] private float speed;
     private float input_magnitude;
-    // jump
+    
+    [Header("Jump Attributes")]
     [SerializeField] private float amount_to_jump;
-    private float distance_to_ground;
     private bool jump;
-    // rotate
+    
+    [Header("Rotation Attributes")]
     private Quaternion new_camera_position;
-    // look
-    private Vector2 look_input;
-    float distance_to_target = 5f;
-    // aim
+    
+    [Header("Looking Attributes")]
+    private Vector3 look_input;
+    
+    [Header("Aiming Attributes")]
     private bool aim_input;
-    // pick up/put away
-    public bool pickUp { get; private set; }
-    public bool putAway { get; private set; }
-    private Inventory inventory;
+    private bool wasAiming;
+
+    [Header("Climbing Attributes")] 
+    [SerializeField] private GameObject stepRay_Upper;
+    [SerializeField] private GameObject stepRayLower;
+    [SerializeField] private float stepHeight = 0.3f;
+    [SerializeField] private float stepSmooth =  0.2f;
+    
+    [Header("Inventory Attributes")]
     [SerializeField] private UI_Inventory uiInventory;
+    private Inventory inventory;
     private Item.ItemType currentItem;
+    private SelectItem selectItem;
 
-
-
-    // sword attack
+    [Header("Sword Attributes")]
     [SerializeField] private GameObject sword;
     private bool swordAttack;
     
-    // arrow
-    [SerializeField] private GameObject arrow;
+    [Header("Arrow Attributes")]
     [SerializeField] private GameObject crosshair;
+    [SerializeField] private float arrowMovingSpeed;
     
-    private Quaternion initialRot;
-    private bool wasAiming;
-    private SelectItem selectItem;
-    
-    // GUN ATTRIBUTES
+
+    [Header("Gun Attributes")]
     [SerializeField] private GameObject gun;
     
-    [SerializeField] private float arrowMovingSpeed;
     [SerializeField] private CameraController cameraController;
-    private Vector3 lookInput;
+
+
+    public bool pickUp { get; private set; }
+    public bool putAway { get; private set; }
     
     
 
     private void Start()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
+        characterController = GetComponent<CharacterController>();
         animator = this.GetComponent<Animator>();
-        rb.detectCollisions = true;
         inventory = new Inventory();
         crosshair.SetActive(false);
         gun.SetActive(false);
@@ -76,15 +86,14 @@ public class PlayerController : MonoBehaviour
         selectItem = gameObject.GetComponent<SelectItem>();
     }
     
-
-    private void FixedUpdate()
+    private void Update()
     {
-        checkAimingInput();
+        СheckAimingInput();
+        CheckSwordAttackAnimation();
         MovePlayer();
-        checkSwordAttackAnimation();
     }
 
-    private void checkSwordAttackAnimation()
+    private void CheckSwordAttackAnimation()
     {
         if (sword.activeSelf && swordAttack)
         {
@@ -96,7 +105,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void checkAimingInput()
+    private void СheckAimingInput()
     {
         if (aim_input && currentItem == Item.ItemType.Arrow && selectItem.ifItemisSelected())
         {
@@ -128,8 +137,11 @@ public class PlayerController : MonoBehaviour
         {
             if (wasAiming)
             {
-                // set deafult position after aiming
-                rb.rotation = Quaternion.Euler(0f, rb.rotation.y, rb.rotation.z);
+                // set default position after aiming
+                transform.Rotate(new Vector3(transform.rotation.x, transform.rotation.y, transform.rotation.z));
+                animator.SetBool("arrowMove", false);
+                animator.SetFloat("velocityX", 0);
+                animator.SetFloat("veloctyZ", 0);
                 wasAiming = false;
             }
             
@@ -141,15 +153,15 @@ public class PlayerController : MonoBehaviour
 
     private void AimingRotation()
     {
-        rb.rotation = Quaternion.Euler(rb.rotation.eulerAngles 
-                                              + new Vector3(-lookInput.y, lookInput.x, 0f));
-        
+        Vector3 rotation = Vector3.up;
+        transform.Rotate(rotation * look_input.x * 50f * Time.deltaTime);
+
     }
     
     private void MovePlayer()
     {
-        Vector3 camF = cameraController.getCamera().transform.forward;
-        Vector3 camR = cameraController.getCamera().transform.right;
+        Vector3 camF = cameraController.GetCamera().transform.forward;
+        Vector3 camR = cameraController.GetCamera().transform.right;
         camF.y = 0;
         camR.y = 0;
         camF = camF.normalized;
@@ -161,31 +173,80 @@ public class PlayerController : MonoBehaviour
         if (!aim_input && new_position != Vector3.zero)
         {
             Quaternion turn = Quaternion.LookRotation(new_position);
-            Quaternion target_rotation = Quaternion.RotateTowards(rb.rotation, turn, 360);
-            rb.MoveRotation(target_rotation);
+            Quaternion target_rotation = Quaternion.RotateTowards(transform.rotation, turn, 360);
+            //rb.MoveRotation(target_rotation);
+            transform.rotation = Quaternion.Slerp(transform.rotation, turn, Time.deltaTime * 3f);
         }
 
         SetWalkAnimations();
-        adjustPlayerSpeedAndMove();
+        AdjustPlayerSpeed();
 
     }
 
-    private void adjustPlayerSpeedAndMove()
+    private void AdjustPlayerSpeed()
     {
         if (!aim_input)
         {
-            rb.MovePosition(rb.position + (new_position * speed * Time.fixedDeltaTime));
+            Vector3 move = new Vector3(move_value.x, 0, move_value.y);
+            GetComponent<CharacterController>().Move(move * Time.deltaTime * speed);
+            
+            //rb.MovePosition(rb.position + (new_position * speed * Time.fixedDeltaTime));
+            //  move = new Vector3(move_value.x, 0, move_value.y);
+            // GetComponent<CharacterController>().Move(move * Time.fixedDeltaTime * speed);
+
         }
         else
         {
-            rb.MovePosition(rb.position + (new_position * arrowMovingSpeed * Time.fixedDeltaTime));
+            Vector3 move = new Vector3(move_value.x, 0, move_value.y);
+            GetComponent<CharacterController>().Move(move * Time.deltaTime * arrowMovingSpeed);
+            //rb.MovePosition(rb.position + (new_position * arrowMovingSpeed * Time.fixedDeltaTime));
         }
     }
 
-    public Vector2 getMoveValues()
+    public Vector2 GetMoveValues()
     {
         return new Vector2(move_value.x, move_value.y);
     }
+
+    private void StepClimb()
+    {
+        Debug.DrawRay(stepRayLower.transform.position, transform.forward);
+        Debug.DrawRay(stepRay_Upper.transform.position, transform.forward);
+        
+        RaycastHit hitLower;
+        if(Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(transform.forward), out hitLower, 0.8f))
+        {
+            RaycastHit hitUpper;
+            if(!Physics.Raycast(stepRay_Upper.transform.position, transform.TransformDirection(transform.forward), out hitUpper, 0.5f))
+            {
+                rb.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
+            
+        }
+        
+        RaycastHit hitLower45;
+        if(Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(1.5f, 0, 1), out hitLower45, 0.8f))
+        {
+            RaycastHit hitUpper45;
+            if(!Physics.Raycast(stepRay_Upper.transform.position, transform.TransformDirection(1.5f, 0, 1), out hitUpper45, 0.5f))
+            {
+                rb.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
+            
+        }
+        
+        RaycastHit hitLowerMinus45;
+        if(Physics.Raycast(stepRayLower.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hitLowerMinus45, 0.8f))
+        {
+            RaycastHit hitUpperMinus45;
+            if(!Physics.Raycast(stepRay_Upper.transform.position, transform.TransformDirection(-1.5f, 0, 1), out hitUpperMinus45, 0.5f))
+            {
+                rb.position -= new Vector3(0f, -stepSmooth, 0f);
+            }
+            
+        }
+    }
+    
 
 
     private void OnTriggerEnter(Collider other)
@@ -244,12 +305,12 @@ public class PlayerController : MonoBehaviour
     }
     
 
-    public void setCurrentItem(Item.ItemType item)
+    public void SetCurrentItem(Item.ItemType item)
     {
         currentItem = item;
     }
 
-    public Item.ItemType getCurrentItem()
+    public Item.ItemType GetCurrentItem()
     {
         return currentItem;
     }
@@ -264,12 +325,12 @@ public class PlayerController : MonoBehaviour
         swordAttack = sword_attack;
         
     }
-    public void receiveInputLook2(Vector2 _look)
+    public void ReceiveInputLook2(Vector2 _look)
     {
-        lookInput = _look;
+        look_input = _look;
     }
 
-    public bool getSwordAttack()
+    public bool GetSwordAttack()
     {
         return swordAttack;
     }
@@ -293,7 +354,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private GameObject arrowInHand;
     public void ReceiveFireInput(bool fire_input)
     {
-        if (fire_input && getMoveValues() == Vector2.zero)
+        if (fire_input && GetMoveValues() == Vector2.zero)
         {
             arrowInHand.SetActive(false);
             animator.SetTrigger("arrowFire");

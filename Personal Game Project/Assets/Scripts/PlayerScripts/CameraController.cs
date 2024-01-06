@@ -20,13 +20,14 @@ public class CameraController : MonoBehaviour
     private RaycastHit hit;
     private bool aimInput;
     private SelectItem selectItem;
+    public float camera_speed;
 
     private void Start()
     {
         gun_camera.enabled = false;
         arrow_camera.enabled = false;
         playerController = player.GetComponent<PlayerController>();
-        selectItem = gameObject.GetComponent<SelectItem>();
+        selectItem = FindObjectOfType<SelectItem>();
 
     }
     
@@ -37,13 +38,13 @@ public class CameraController : MonoBehaviour
         if (aimInput && selectItem.ifItemisSelected())
         {
             
-            if (playerController.getCurrentItem() == Item.ItemType.Arrow)
+            if (playerController.GetCurrentItem() == Item.ItemType.Arrow)
             {
                 camera.enabled = false;
                 gun_camera.enabled = false;
                 arrow_camera.enabled = true;
             }
-            else if (playerController.getCurrentItem() == Item.ItemType.Gun)
+            else if (playerController.GetCurrentItem() == Item.ItemType.Gun)
             {
                 camera.enabled = false;
                 gun_camera.enabled = true;
@@ -61,17 +62,20 @@ public class CameraController : MonoBehaviour
     
     private void LateUpdate()
     {
-        moveCamera();
+        if (!PauseControl.isPaused)
+        {
+            MoveCamera();
+        }
     }
 
-    private void moveCamera()
+    private void MoveCamera()
     {
         // Original: orbiting around a pivot point approach
         if (camera.enabled)
         {
             // get an input from the player
-            look_hor += look_input.x;
-            look_vert -= look_input.y;
+            look_hor += look_input.x * camera_speed;
+            look_vert -= look_input.y * camera_speed;
         
             // clamp the view to create a realistic field of view
             look_vert = Mathf.Clamp(look_vert, -15f, 40f);
@@ -98,16 +102,16 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    public Camera getCamera()
+    public Camera GetCamera()
     {
         if (inputManager.aim_input)
         {
-            if (playerController.getCurrentItem() == Item.ItemType.Arrow)
+            if (playerController.GetCurrentItem() == Item.ItemType.Arrow)
             {
                 return arrow_camera;
 
             }
-            else if (playerController.getCurrentItem() == Item.ItemType.Gun)
+            else if (playerController.GetCurrentItem() == Item.ItemType.Gun)
             {
                 return gun_camera;
 

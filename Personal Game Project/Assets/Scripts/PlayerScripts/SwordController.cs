@@ -14,7 +14,7 @@ public class SwordController : MonoBehaviour
 
     private void Update()
     {
-        if (playerController.getSwordAttack())
+        if (playerController.GetSwordAttack())
         {
             isAttacking = true;
             swordSound.Play();
