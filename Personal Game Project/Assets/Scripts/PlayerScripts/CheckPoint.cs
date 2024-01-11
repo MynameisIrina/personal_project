@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class CheckPoint : MonoBehaviour
 {
+    private GameObject player;
     [SerializeField] private HealthBarManager healthBarManager;
     [SerializeField] Vector3 currentCheckPointPosition;
     private Rigidbody rb;
@@ -13,7 +14,7 @@ public class CheckPoint : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        rb = gameObject.GetComponent<Rigidbody>();
+        player = FindObjectOfType<PlayerController>().gameObject;
     }
 
     // Update is called once per frame
@@ -21,10 +22,7 @@ public class CheckPoint : MonoBehaviour
     {
         if (healthBarManager.getHealthAmount() < 0.1f)
         {
-             // if (currentCheckPointPosition != Vector3.zero) 
-             // {
-                rb.position = currentCheckPointPosition;
-            //}
+            player.transform.position = currentCheckPointPosition;
         }
     }
 

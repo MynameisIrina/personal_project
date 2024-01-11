@@ -16,7 +16,7 @@ public class PatrolState : StateMachineBehaviour
         timer = 0;
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = animator.GetComponent<NavMeshAgent>();
-        agent.speed = 2.5f;
+        agent.speed = 4f;
         GameObject go = GameObject.FindGameObjectWithTag("WayPoints");
         foreach (Transform tr in go.transform)
         {
@@ -40,7 +40,7 @@ public class PatrolState : StateMachineBehaviour
         
         // calculate distance between player and enemy
         float distance = Vector3.Distance(animator.transform.position, player.position);
-        if (distance < 25)
+        if (distance < 35)
         {
             animator.SetBool("isChasing", true);
         }
