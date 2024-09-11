@@ -155,7 +155,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                 {
                     ""name"": """",
                     ""id"": ""2894e419-2673-49bf-bef5-ae509a39c9c3"",
-                    ""path"": ""<Gamepad>/leftShoulder"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -284,41 +284,8 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
             ""bindings"": [
                 {
                     ""name"": """",
-                    ""id"": ""c2133b1c-2eff-451c-9f42-044cf2a1d419"",
-                    ""path"": ""<Gamepad>/dpad/right"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""ShowInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""b764f90f-6161-4ea0-91d9-686c8a32a950"",
-                    ""path"": ""<Gamepad>/dpad/left"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""Gamepad"",
-                    ""action"": ""ShowInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""ca28b997-4af6-4580-85bd-1be3b9f11a15"",
                     ""path"": ""<Gamepad>/dpad/up"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""ShowInventory"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""164a22fb-096c-40a1-9b35-30ddd78b4cce"",
-                    ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Gamepad"",
@@ -365,7 +332,7 @@ public partial class @PlayerActionController : IInputActionCollection2, IDisposa
                     ""path"": ""<Gamepad>/dpad/down"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""HideInventory"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false

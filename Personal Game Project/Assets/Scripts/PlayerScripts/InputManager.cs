@@ -23,6 +23,7 @@ public class InputManager : MonoBehaviour
     private bool climb;
     private bool pick_up;
     private bool sword_attack;
+    private bool jump_input;
     
     // UI
     [SerializeField] private UI_Inventory uiInventory;
@@ -60,6 +61,10 @@ public class InputManager : MonoBehaviour
            look_input = Vector2.zero;
            
        };
+
+       _actionController.Player.Jump.performed += ctx => jump_input = ctx.ReadValueAsButton();
+       _actionController.Player.Jump.canceled += ctx => jump_input = false;
+
        
         
         _actionController.Player.Aim.performed += ctx =>
@@ -102,8 +107,8 @@ public class InputManager : MonoBehaviour
         _actionController.UI.ShowInventory.performed += ctx => showInventory = ctx.ReadValueAsButton();
         _actionController.UI.ShowInventory.canceled += ctx => showInventory = false;
         
-        _actionController.Player.Putaway.performed += ctx => showInventory = ctx.ReadValueAsButton();
-        _actionController.Player.Putaway.canceled += ctx => showInventory = false;
+        _actionController.Player.Putaway.performed += ctx => put_away = ctx.ReadValueAsButton();
+        _actionController.Player.Putaway.canceled += ctx => put_away = false;
         
         _actionController.UI.GetRightItem.performed += ctx =>
         {
@@ -149,6 +154,7 @@ public class InputManager : MonoBehaviour
         player_controller.ReceiveInputMovement(move_value);
         camera_controller.ReceiveInputLook(look_input);
         player_controller.ReceiveInputLook2(look_input);
+        player_controller.ReceiveJumpInput(jump_input);
         player_controller.ReceiveAimInput(aim_input);
         camera_controller.ReceiveAimInput(aim_input);
         player_controller.ReceivePickUpInput(pick_up);

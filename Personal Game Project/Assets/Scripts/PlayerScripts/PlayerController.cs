@@ -14,56 +14,54 @@ public class PlayerController : MonoBehaviour
 {
     private CharacterController characterController;
 
-    [Header("Animator Attributes")]
-    private Animator animator;
+    [Header("Animator Attributes")] private Animator animator;
 
-    [Header("Movement Attributes")]
-    private Vector3 move;
+    [Header("Movement Attributes")] private Vector3 move;
     private float gravity = -9.81f;
     private float velocity;
     public Vector3 new_position { get; private set; }
     private Vector2 move_value;
     [SerializeField] private float speed;
     private float input_magnitude;
-    
-    [Header("Jump Attributes")]
-    [SerializeField] private float amount_to_jump;
+
+    [Header("Jump Attributes")] [SerializeField]
+    private float amount_to_jump;
+
     private bool jump;
-    
-    [Header("Rotation Attributes")]
-    private Quaternion new_camera_position;
-    
-    [Header("Looking Attributes")]
-    private Vector3 look_input;
-    
-    [Header("Aiming Attributes")]
-    private bool aim_input;
+
+    [Header("Rotation Attributes")] private Quaternion new_camera_position;
+
+    [Header("Looking Attributes")] private Vector3 look_input;
+
+    [Header("Aiming Attributes")] private bool aim_input;
     private bool wasAiming;
 
-    [Header("Inventory Attributes")]
-    [SerializeField] private UI_Inventory uiInventory;
+    [Header("Inventory Attributes")] [SerializeField]
+    private UI_Inventory uiInventory;
+
     private Inventory inventory;
     private Item.ItemType currentItem;
     private SelectItem selectItem;
 
-    [Header("Sword Attributes")]
-    [SerializeField] private GameObject sword;
-    private bool swordAttack;
-    
-    [Header("Arrow Attributes")]
-    [SerializeField] private GameObject crosshair;
-    [SerializeField] private float arrowMovingSpeed;
-    
+    [Header("Sword Attributes")] [SerializeField]
+    private GameObject sword;
 
-    [Header("Gun Attributes")]
-    [SerializeField] private GameObject gun;
-    
+    private bool swordAttack;
+
+    [Header("Arrow Attributes")] [SerializeField]
+    private GameObject crosshair;
+
+    [SerializeField] private float arrowMovingSpeed;
+
+
+    [Header("Gun Attributes")] [SerializeField]
+    private GameObject gun;
+
     [SerializeField] private CameraController cameraController;
-    
+
     public bool pickUp { get; private set; }
     public bool putAway { get; private set; }
-    
-    
+
 
     private void Start()
     {
@@ -79,16 +77,17 @@ public class PlayerController : MonoBehaviour
         wasAiming = false;
         selectItem = gameObject.GetComponent<SelectItem>();
     }
-    
+
     private void Update()
     {
         СheckAimingInput();
         CheckSwordAttackAnimation();
         RotatePlayer();
-        ApplyGravity();
+        //ApplyGravity();
         SetWalkAnimations();
         MovePlayer();
     }
+
 
     private void CheckSwordAttackAnimation()
     {
@@ -101,7 +100,6 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("swordAttack", false);
         }
     }
-
 
 
     private void СheckAimingInput()
@@ -122,10 +120,11 @@ public class PlayerController : MonoBehaviour
                     animator.SetBool("arrowMove", false);
                 }
             }
+
             AimingRotation();
             wasAiming = true;
         }
-        else if (aim_input && currentItem == Item.ItemType.Gun && selectItem.ifItemisSelected() )
+        else if (aim_input && currentItem == Item.ItemType.Gun && selectItem.ifItemisSelected())
         {
             AimingRotation();
             crosshair.SetActive(true);
@@ -143,7 +142,7 @@ public class PlayerController : MonoBehaviour
                 animator.SetFloat("veloctyZ", 0);
                 wasAiming = false;
             }
-            
+
             animator.SetBool("gunAim", false);
             animator.SetBool("arrowAim", false);
             crosshair.SetActive(false);
@@ -154,9 +153,8 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 rotation = Vector3.up;
         transform.Rotate(rotation * look_input.x * 50f * Time.deltaTime);
-
     }
-    
+
     private void RotatePlayer()
     {
         Vector3 camF = cameraController.GetCamera().transform.forward;
@@ -165,7 +163,7 @@ public class PlayerController : MonoBehaviour
         camR.y = 0;
         camF = camF.normalized;
         camR = camR.normalized;
-        
+
         new_position = (move_value.x * camR + move_value.y * camF);
 
         // rotate player regardless of camera position
@@ -175,9 +173,8 @@ public class PlayerController : MonoBehaviour
             Quaternion target_rotation = Quaternion.RotateTowards(transform.rotation, turn, 360);
             transform.rotation = Quaternion.Slerp(transform.rotation, turn, Time.deltaTime * 3f);
         }
-
     }
-    
+
     private void ApplyGravity()
     {
         if (!characterController.isGrounded)
@@ -188,6 +185,7 @@ public class PlayerController : MonoBehaviour
         {
             velocity = -1f;
         }
+
         move.y = velocity;
     }
 
@@ -195,11 +193,10 @@ public class PlayerController : MonoBehaviour
     {
         move = new Vector3(move_value.x, 0, move_value.y);
         ApplyGravity();
-        
+
         if (!aim_input)
         {
             characterController.Move(move * Time.deltaTime * speed);
-
         }
         else
         {
@@ -223,7 +220,6 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Weapon"))
         {
             gameObject.GetComponent<PickUpWeapon>().enabled = true;
-            
         }
     }
 
@@ -233,26 +229,26 @@ public class PlayerController : MonoBehaviour
         {
             gameObject.GetComponent<OpenDoor>().enabled = false;
         }
+
         if (other.CompareTag("Note"))
         {
             gameObject.GetComponent<OpenNote>().enabled = false;
         }
+
         if (other.CompareTag("Weapon"))
         {
             gameObject.GetComponent<PickUpWeapon>().enabled = false;
         }
-        
     }
-    
-    
+
 
     /* calculate length of the vector to interpolate
        between walk and run animations. See BlendTree.*/
     private void SetWalkAnimations()
     {
-        float speed_blendtree = Mathf.Clamp01(new_position.magnitude); 
+        float speed_blendtree = Mathf.Clamp01(new_position.magnitude);
         animator.SetFloat("Walk Magnitude", speed_blendtree);
-        
+
         if (speed_blendtree > 0f)
         {
             animator.SetBool("forward", true);
@@ -262,7 +258,7 @@ public class PlayerController : MonoBehaviour
             animator.SetBool("forward", false);
         }
     }
-    
+
 
     public void SetCurrentItem(Item.ItemType item)
     {
@@ -282,14 +278,18 @@ public class PlayerController : MonoBehaviour
     public void ReceiveSwordAttackInput(bool sword_attack)
     {
         swordAttack = sword_attack;
-        
     }
+
     public void ReceiveInputLook2(Vector2 _look)
     {
         look_input = _look;
     }
-    
-    
+
+    public void ReceiveJumpInput(bool _jump)
+    {
+        animator.SetBool("jump", _jump);
+    }
+
     public Vector2 GetMoveValues()
     {
         return new Vector2(move_value.x, move_value.y);
@@ -304,7 +304,7 @@ public class PlayerController : MonoBehaviour
     {
         aim_input = _aim;
     }
-    
+
 
     public void ReceivePickUpInput(bool _pick_up)
     {
@@ -317,6 +317,7 @@ public class PlayerController : MonoBehaviour
     }
 
     [SerializeField] private GameObject arrowInHand;
+
     public void ReceiveFireInput(bool fire_input)
     {
         if (fire_input && GetMoveValues() == Vector2.zero)
@@ -326,7 +327,7 @@ public class PlayerController : MonoBehaviour
             StartCoroutine(waitForAnimation());
         }
     }
-    
+
     void TakeArrow()
     {
         arrowInHand.SetActive(true);
@@ -337,25 +338,10 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(1);
         animator.ResetTrigger("arrowFire");
     }
-    
+
 
     public Inventory GetInventory()
     {
         return inventory;
     }
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
