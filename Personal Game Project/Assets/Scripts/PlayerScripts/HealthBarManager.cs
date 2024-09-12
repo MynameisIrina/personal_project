@@ -54,6 +54,12 @@ public class HealthBarManager : MonoBehaviour
         }
     }
 
+    public void ReloadHealthBar()
+    {
+        healthBar.GetComponent<Image>().fillAmount = 1;
+        onFire = false;
+    }
+
     public float getHealthAmount()
     {
         return healthBar.GetComponent<Image>().fillAmount;

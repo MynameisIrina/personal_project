@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class SelectItem : MonoBehaviour
@@ -17,17 +14,13 @@ public class SelectItem : MonoBehaviour
     private Item.ItemType currentItem;
 
 
-    void Start()
-    {
-    }
-
     // Update is called once per frame
     void Update()
     {
         /*
          * select item from inventory based on the current position of the border
          */
-        
+
         if (selectItem && playerController.GetInventory().itemList.Count > 0)
         {
             if (currentItem == Item.ItemType.Arrow)
@@ -51,10 +44,7 @@ public class SelectItem : MonoBehaviour
                 bow.SetActive(false);
                 gun.SetActive(true);
             }
-            
-
         }
-        
     }
 
     public bool ifItemisSelected()
@@ -63,12 +53,10 @@ public class SelectItem : MonoBehaviour
         {
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
-    
+
     public void ReceiveSelectItem(bool _selectItem, Item.ItemType _currentItem)
     {
         selectItem = _selectItem;

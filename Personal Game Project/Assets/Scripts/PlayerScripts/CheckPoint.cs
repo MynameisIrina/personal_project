@@ -1,20 +1,18 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CheckPoint : MonoBehaviour
 {
-    private GameObject player;
+    private CharacterController player;
+    private CameraController camera;
     [SerializeField] private HealthBarManager healthBarManager;
-    [SerializeField] Vector3 currentCheckPointPosition;
-    private Rigidbody rb;
+    [SerializeField] Transform currentCheckPointTransform;
 
     [Header("Check Points")] [SerializeField] private GameObject point1, point2, point3;
     // Start is called before the first frame update
     void Start()
     {
-        player = FindObjectOfType<PlayerController>().gameObject;
+        player = GetComponent<CharacterController>();
+        camera = FindObjectOfType<CameraController>();
     }
 
     // Update is called once per frame
@@ -22,7 +20,12 @@ public class CheckPoint : MonoBehaviour
     {
         if (healthBarManager.getHealthAmount() < 0.1f)
         {
-            player.transform.position = currentCheckPointPosition;
+            player.enabled = false;
+            player.transform.position = currentCheckPointTransform.position;
+            player.transform.rotation = currentCheckPointTransform.rotation;
+            camera.ResetCamera();
+            player.enabled = true;
+            healthBarManager.ReloadHealthBar();
         }
     }
 
@@ -31,15 +34,16 @@ public class CheckPoint : MonoBehaviour
     {
         if (other.CompareTag("checkpoint1"))
         {
-            currentCheckPointPosition = point1.transform.position;
+            currentCheckPointTransform = point1.transform;
+            
         }
         else if (other.CompareTag("checkpoint2"))
         {
-            currentCheckPointPosition = point2.transform.position;
+            currentCheckPointTransform = point2.transform;
         }
         else if (other.CompareTag("checkpoint3"))
         {
-            currentCheckPointPosition = point3.transform.position;
+            currentCheckPointTransform = point3.transform;
         }
     }
 }

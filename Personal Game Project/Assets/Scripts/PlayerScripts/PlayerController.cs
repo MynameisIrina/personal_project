@@ -1,11 +1,5 @@
-using System;
 using System.Collections;
-using System.Linq.Expressions;
-using Cinemachine.Utility;
-using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
-using Debug = UnityEngine.Debug;
 using Quaternion = UnityEngine.Quaternion;
 using Vector2 = UnityEngine.Vector2;
 using Vector3 = UnityEngine.Vector3;
@@ -26,7 +20,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Jump Attributes")] [SerializeField]
     private float amount_to_jump;
-
     private bool jump;
 
     [Header("Rotation Attributes")] private Quaternion new_camera_position;
@@ -38,7 +31,6 @@ public class PlayerController : MonoBehaviour
 
     [Header("Inventory Attributes")] [SerializeField]
     private UI_Inventory uiInventory;
-
     private Inventory inventory;
     private Item.ItemType currentItem;
     private SelectItem selectItem;

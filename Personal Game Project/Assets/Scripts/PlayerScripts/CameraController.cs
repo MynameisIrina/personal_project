@@ -119,6 +119,13 @@ public class CameraController : MonoBehaviour
         }
         return camera;
     }
+
+    public void ResetCamera()
+    {
+        look_hor = 0f;
+        look_vert = 0f;
+        look_input = Vector2.zero;
+    }
     
 
     public void ReceiveAimInput(bool aim_input)
