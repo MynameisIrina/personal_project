@@ -21,6 +21,8 @@ TagManager:
   - checkpoint1
   - checkpoint2
   - checkpoint3
+  - DragonWayPoints
+  - Flame
   layers:
   - Default
   - TransparentFX

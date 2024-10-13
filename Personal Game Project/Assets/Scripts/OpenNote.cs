@@ -18,7 +18,6 @@ public class OpenNote : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("show note " + showNote);
         if (showNote)
         {
             if (playerController.pickUp)

@@ -25,7 +25,6 @@ public class HealthBarManager : MonoBehaviour
         }
         else
         {
-            // TODO: add aid kit
             healthBar.GetComponent<Image>().fillAmount += healthAmountToHeal;
         }
     }
