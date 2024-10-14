@@ -1,33 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.AI;
 
-public class FlameAttackState : StateMachineBehaviour
+public class GetHitState : StateMachineBehaviour
 {
-    private ParticleSystem flame;
-    private NavMeshAgent agent;
-    private Transform player;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
-    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
-        agent = animator.GetComponent<NavMeshAgent>();
-        flame = GameObject.FindGameObjectWithTag("Flame").GetComponent<ParticleSystem>();
-        flame.Play();
-    }
+    // override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    // {
+    //     
+    // }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
-    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
-    {
-        //agent.SetDestination(player.position);
-        //animator.transform.LookAt(player.position);
-        
-    }
+    //override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    //{
+    //    
+    //}
 
     // OnStateExit is called when a transition ends and the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        animator.SetBool("isFlameAttacking", false);
-        flame.Stop();
+        animator.SetBool("gotHit", false);
     }
 
     // OnStateMove is called right after Animator.OnAnimatorMove()

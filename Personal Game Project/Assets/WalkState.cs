@@ -28,6 +28,7 @@ public class WalkState : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        
         if (agent.remainingDistance <= agent.stoppingDistance)
         {
             agent.SetDestination(wayPoints[Random.Range(0, wayPoints.Count)].position);
@@ -36,14 +37,14 @@ public class WalkState : StateMachineBehaviour
         timer += Time.deltaTime;
         if (timer >= 10)
         {
-            
             animator.SetBool("isPatrolling", false);
         }
 
         float distance = Vector3.Distance(animator.transform.position, player.transform.position);
 
-        if (distance <= 45)
+        if (distance <= 75)
         {
+            animator.SetBool("isPatrolling", false);
             animator.SetBool("isScreaming", true);
         }
 

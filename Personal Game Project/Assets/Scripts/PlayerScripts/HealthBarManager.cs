@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -53,11 +50,17 @@ public class HealthBarManager : MonoBehaviour
         }
     }
 
+    public void TakeDamage(float damage)
+    {
+        healthBar.GetComponent<Image>().fillAmount -= damage;
+    }
+
     public void ReloadHealthBar()
     {
         healthBar.GetComponent<Image>().fillAmount = 1;
         onFire = false;
     }
+    
 
     public float getHealthAmount()
     {

@@ -20,18 +20,8 @@ public class IdleStateDragon : StateMachineBehaviour
             animator.SetBool("isPatrolling", true);
         }
         float distance = Vector3.Distance(animator.transform.position, player.position);
-        bool playerInSight = false;
-        RaycastHit hit;
-        Vector3 rayDirection = player.position - animator.transform.position;
-        if (Physics.Raycast(animator.transform.position, rayDirection, out hit))
-        {
-            if (hit.transform == player)
-            {
-                playerInSight = true;
-            }
-        }
         
-        if (distance < 45 && playerInSight)
+        if (distance < 75)
         {
             animator.SetBool("isChasing", true);
         }

@@ -23,6 +23,9 @@ TagManager:
   - checkpoint3
   - DragonWayPoints
   - Flame
+  - Bullet
+  - Arrow
+  - Sword
   layers:
   - Default
   - TransparentFX
