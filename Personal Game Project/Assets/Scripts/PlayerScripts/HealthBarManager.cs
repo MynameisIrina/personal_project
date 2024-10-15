@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,37 +8,36 @@ public class HealthBarManager : MonoBehaviour
     [SerializeField] private float healthAmonuntToReduce_Fire;
     [SerializeField] private float healthAmountToReduce_Enemy;
     [SerializeField] private float healthAmountToHeal;
-    private bool onFire;
-
+    [SerializeField] private CheckPointObserver checkPoint;
     [SerializeField] private Animator enemy1;
     private bool getDamageEnemy;
+    private bool onFire;
 
-
-    // Update is called once per frame
+    
     void Update()
     {
-        if (onFire && healthBar.GetComponent<Image>().fillAmount != 0f)
-        {
-            healthBar.GetComponent<Image>().fillAmount -= healthAmonuntToReduce_Fire;
-        }
-        else
+        if (healthBar.GetComponent<Image>().fillAmount < 1f)
         {
             healthBar.GetComponent<Image>().fillAmount += healthAmountToHeal;
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerStay(Collider other)
     {
         if (other.CompareTag("Fire"))
         {
-            onFire = true;
+            TakeDamage(healthAmonuntToReduce_Fire);
         }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
         
         if (other.gameObject.CompareTag("EnemyClaws"))
         {
             if (enemy1.GetBool("isAttacking"))
             {
-                healthBar.GetComponent<Image>().fillAmount -= healthAmountToReduce_Enemy;
+                TakeDamage(healthAmountToReduce_Enemy);
             }
         }
     }
@@ -53,6 +53,11 @@ public class HealthBarManager : MonoBehaviour
     public void TakeDamage(float damage)
     {
         healthBar.GetComponent<Image>().fillAmount -= damage;
+
+        if (healthBar.GetComponent<Image>().fillAmount <= 0f)
+        {
+            checkPoint?.GoToLastCheckpoint();
+        }
     }
 
     public void ReloadHealthBar()
@@ -62,7 +67,7 @@ public class HealthBarManager : MonoBehaviour
     }
     
 
-    public float getHealthAmount()
+    public float GetHealthAmount()
     {
         return healthBar.GetComponent<Image>().fillAmount;
     }

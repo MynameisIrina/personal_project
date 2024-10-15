@@ -162,7 +162,7 @@ public class PlayerController : MonoBehaviour
         if (!aim_input && new_position != Vector3.zero)
         {
             Quaternion turn = Quaternion.LookRotation(new_position);
-            Quaternion target_rotation = Quaternion.RotateTowards(transform.rotation, turn, 360);
+            //Quaternion target_rotation = Quaternion.RotateTowards(transform.rotation, turn, 360);
             transform.rotation = Quaternion.Slerp(transform.rotation, turn, Time.deltaTime * 3f);
         }
     }
