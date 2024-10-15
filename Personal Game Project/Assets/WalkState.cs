@@ -28,6 +28,11 @@ public class WalkState : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (animator.gameObject.GetComponent<DragonController>().GetCurrentHealth() <= 0f)
+        {
+            animator.SetBool("isDead", true);
+            animator.SetBool("isPatrolling", false);
+        }
         
         if (agent.remainingDistance <= agent.stoppingDistance)
         {

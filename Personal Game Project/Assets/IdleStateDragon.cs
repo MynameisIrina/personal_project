@@ -14,6 +14,11 @@ public class IdleStateDragon : StateMachineBehaviour
     
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (animator.gameObject.GetComponent<DragonController>().GetCurrentHealth() <= 0f)
+        {
+            animator.SetBool("isDead", true);
+        }
+        
         timer += Time.deltaTime;
         if (timer > 5)
         {

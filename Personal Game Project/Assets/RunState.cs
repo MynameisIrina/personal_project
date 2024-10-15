@@ -12,13 +12,17 @@ public class RunState : StateMachineBehaviour
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = animator.GetComponent<NavMeshAgent>();
-        player = GameObject.FindGameObjectWithTag("Player").transform;
         agent.speed = 12f;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        if (animator.gameObject.GetComponent<DragonController>().GetCurrentHealth() <= 0f)
+        {
+            animator.SetBool("isDead", true);
+            animator.SetBool("isChasing", false);
+        }
         
         agent.SetDestination(player.position);
         

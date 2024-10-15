@@ -67977,7 +67977,7 @@ GameObject:
   - component: {fileID: 1328176871}
   - component: {fileID: 1328176872}
   m_Layer: 0
-  m_Name: Rain
+  m_Name: RainAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -82983,7 +82983,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: -9, y: -23.00003}
+  m_AnchoredPosition: {x: -9, y: -23}
   m_SizeDelta: {x: 164.7, y: 169.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1804193411
@@ -101934,7 +101934,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 485857405886556795, guid: a5748d556a8554beaab726da701c8dfa, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 203.6
+      value: 188
       objectReference: {fileID: 0}
     - target: {fileID: 485857405886556795, guid: a5748d556a8554beaab726da701c8dfa, type: 3}
       propertyPath: m_LocalPosition.y
@@ -101942,7 +101942,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 485857405886556795, guid: a5748d556a8554beaab726da701c8dfa, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 127.6
+      value: 358
       objectReference: {fileID: 0}
     - target: {fileID: 485857405886556795, guid: a5748d556a8554beaab726da701c8dfa, type: 3}
       propertyPath: m_LocalRotation.w

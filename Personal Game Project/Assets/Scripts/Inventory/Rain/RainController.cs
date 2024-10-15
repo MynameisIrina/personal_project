@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -65,13 +64,19 @@ public class RainController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        trigger = true;
-        thunderSound.Play();
-        rainSound.Play();
+        if (other.CompareTag("Player"))
+        {
+            trigger = true;
+            thunderSound.Play();
+            rainSound.Play();
+        }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        GetComponent<BoxCollider>().enabled = false;
+        if (other.CompareTag("Player"))
+        {
+            GetComponent<BoxCollider>().enabled = false;
+        }
     }
 }

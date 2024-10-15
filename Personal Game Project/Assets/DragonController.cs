@@ -22,15 +22,15 @@ public class DragonController : MonoBehaviour
                 String currentState = animator.GetCurrentAnimatorStateInfo(0).ToString();
                 animator.SetBool(currentState, false);
                 animator.SetBool("isChasing", true);
-                TakeDamage(0.01f);
+                TakeDamage(0.5f);
             }
             else if (other.gameObject.CompareTag("Arrow"))
             {
-                TakeDamage(0.005f);
+                TakeDamage(0.5f);
             }
             else if (other.gameObject.CompareTag("Sword"))
             {
-                TakeDamage(0.1f);
+                TakeDamage(0.5f);
             }
         }
         
@@ -40,9 +40,15 @@ public class DragonController : MonoBehaviour
     private void TakeDamage(float damage)
     {
         healthBar.fillAmount -= damage;
-        if (healthBar.fillAmount <= 0)
-        {
-            animator.SetBool("isDead", true);
-        }
+        // if (healthBar.fillAmount <= 0)
+        // {
+        //     Debug.Log("dragon dead");
+        //     animator.SetBool("isDead", true);
+        // }
+    }
+
+    public float GetCurrentHealth()
+    {
+        return healthBar.fillAmount;
     }
 }
